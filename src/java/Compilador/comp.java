@@ -36,8 +36,10 @@ public class comp {
         //Process process = new ProcessBuilder("C:\\PathToExe\\MyExe.exe", "param1", "param2").start();
         try {
             //runProcess("javac Main.java");
-            //runProcess("java Main");
-            runProcess("C://Program Files//TeraCopy//TeraCopy.exe");
+            //runProcess("java Main")
+            
+            // fazer isso vai gerar um executavel na raiz do projeto
+            runProcess("C://tcc//tcc.exe c://tcc//examples//fib.c");
         } catch (Exception e) {
             e.printStackTrace();
         }
