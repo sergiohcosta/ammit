@@ -78,6 +78,26 @@ public interface AmmitListener extends ParseTreeListener {
 	 */
 	void exitMax(AmmitParser.MaxContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link AmmitParser#nconst}.
+	 * @param ctx the parse tree
+	 */
+	void enterNconst(AmmitParser.NconstContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link AmmitParser#nconst}.
+	 * @param ctx the parse tree
+	 */
+	void exitNconst(AmmitParser.NconstContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link AmmitParser#repeat}.
+	 * @param ctx the parse tree
+	 */
+	void enterRepeat(AmmitParser.RepeatContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link AmmitParser#repeat}.
+	 * @param ctx the parse tree
+	 */
+	void exitRepeat(AmmitParser.RepeatContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link AmmitParser#strregex}.
 	 * @param ctx the parse tree
 	 */

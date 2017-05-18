@@ -19,7 +19,7 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
  */
 public class InputGenerator extends AmmitBaseListener {
     private String output;
-    private int min, max;
+    private int min, max, rep;
     private final int MAXINT=32767;
     private final int MININT=-32768;
     private ParseTreeWalker walker;
@@ -50,15 +50,23 @@ public class InputGenerator extends AmmitBaseListener {
     }
     
     @Override
+    public void exitRow(AmmitParser.RowContext ctx){
+        output=output.trim();
+    }
+    
+    @Override
     public void enterNint(AmmitParser.NintContext ctx){
         min=MININT; max=MAXINT;
     }
     
     @Override
     public void exitNint(AmmitParser.NintContext ctx){
-        int x=new Random().nextInt(max-min+1)+min;
-        output += " " +x;
-        output = output.trim();
+        Random rnd=new Random();
+        int i,x;
+        for(i=0; i<rep; i++){
+            x=rnd.nextInt(max-min+1)+min;
+            output += " " +x;
+        }
     }
     
     @Override
@@ -71,4 +79,14 @@ public class InputGenerator extends AmmitBaseListener {
         min=Integer.valueOf(ctx.INT().getText());
     }
     
+    @Override
+    public void exitNconst(AmmitParser.NconstContext ctx) {
+        output += " " +ctx.INT().getText();
+    }
+    
+    
+    @Override
+    public void exitRepeat(AmmitParser.RepeatContext ctx) {
+        rep=Integer.valueOf(ctx.INT().getText());
+    }
 }
