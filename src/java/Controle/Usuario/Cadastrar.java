@@ -4,8 +4,6 @@ import Controle.Logica;
 import DAO.UsuarioDAO;
 import beans.Usuario;
 import java.util.ArrayList;
-import java.util.Enumeration;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -24,6 +22,8 @@ public class Cadastrar implements Logica {
 
         // So tenta processar informacoes se for um POST
         if (req.getMethod().equals("POST")) {
+            
+            int usuarioId = Integer.parseInt(req.getParameter("id"));
 
             // seta a mensagem como cadastrado como sucesso     
             req.setAttribute("status", "1");
@@ -32,12 +32,6 @@ public class Cadastrar implements Logica {
             // verificacao server-side do POST
             // TODO: implementar validacao nos campos que faltam e checar se há melhorias possíveis nas validações
             String perfil = req.getParameter("perfil");
-
-            if (!perfil.equals("Atendente") && !perfil.equals("Nutricionista") && !perfil.equals("Gerente")) {
-                req.setAttribute("status", "0");
-                req.setAttribute("errNome", "1");
-                msgErro.add("Selecione um perfil válido para o funcionário");
-            }
 
             String nome = req.getParameter("nome");
 
@@ -67,18 +61,16 @@ public class Cadastrar implements Logica {
             System.out.println("Erros encontrados: " + msgErro.size());
 
             if (req.getAttribute("status").equals("1")) {
-                // TODO: grave no banco
-                System.out.println("Gravar no banco");
                 
                 Usuario p = new Usuario();
 
-                p.setId(Integer.parseInt(req.getParameter("id")));
+                p.setId(usuarioId);
                 p.setPerfil(perfil);
                 p.setNome(nome);
                 p.setEmail(email);
                 p.setSenha(senha);
 
-                if (p.getId() == 0) {
+                if (usuarioId == 0) {
                     System.out.println("Cadastrando: " + p);
                     fDao.insereUsuario(p);
 
@@ -99,7 +91,7 @@ public class Cadastrar implements Logica {
 
         }
 
-        return "/pages/funcionario/cadastrar.jsp";
+        return "/pages/usuario/cadastrar.jsp";
 
     }
 

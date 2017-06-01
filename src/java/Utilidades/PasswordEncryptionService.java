@@ -21,6 +21,8 @@ public class PasswordEncryptionService {
             throws NoSuchAlgorithmException, InvalidKeySpecException {
   // Encrypt the clear-text password using the same salt that was used to
         // encrypt the original password
+        System.out.println(attemptedPassword);
+        System.out.println(salt);
         byte[] encryptedAttemptedPassword = getEncryptedPassword(attemptedPassword, salt);
 
   // Authentication succeeds if encrypted password that the user entered

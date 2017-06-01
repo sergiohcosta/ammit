@@ -31,12 +31,10 @@ public class UsuarioDAO {
             + "nome = ?"
             + ",email = ?"
             + ",cpf = ?"
-            + ",crm = ?"
-            + ",senha = ?"
             + ",perfil = ?"
             + ",situacao = ?"
-            + ",endereco = ?"
-            + ",telefone = ?"
+            + ",pwd = ?"
+            + ",salt = ?"
             + " WHERE id = ?"
     );
     stmtObtemUsuario = con.prepareStatement(
@@ -49,9 +47,9 @@ public class UsuarioDAO {
 
     stmtInserir = con.prepareStatement(
             "INSERT INTO usuario ("
-            + "nome, email, senha, perfil, situacao, salt, pwd"
+            + "nome, email, perfil, situacao, salt, pwd"
             + ") VALUES ("
-            + "?, ?, ?, ?, ?, ?, ?"
+            + "?, ?, ?, ?, ?, ?"
             + ")"
     );
 
@@ -82,24 +80,24 @@ public class UsuarioDAO {
 
   }
 
-  public int alteraUsuario(Usuario c) throws SQLException {
+  public int alteraUsuario(Usuario c)
+          throws SQLException, ParseException, NoSuchAlgorithmException, InvalidKeySpecException {
     /* 1 nome = ?"
      2 + ",email = ?"
-     3 + ",cpf = ?"
-     4 + ",crm = ?"
-     5 + ",senha = ?"
-     6 + ",perfil = ?"
-     7 + ",situacao = ?"
-     8+ ",endereco = ?"
-     9+ ",telefone = ?"
-     10+ " WHERE id = ?" */
+     3 + ",perfil = ?"
+     4 + ",situacao = ?"
+     5+ " WHERE id = ?" */
+    
+    PasswordEncryptionService PES = new PasswordEncryptionService();
+    byte[] salt = PES.generateSalt();
+    byte[] pwd = PES.getEncryptedPassword(c.getSenha(), salt);
 
     stmtAtualizar.setString(1, c.getNome());
     stmtAtualizar.setString(2, c.getEmail());
-    stmtAtualizar.setString(5, c.getSenha());
-    stmtAtualizar.setString(6, c.getPerfil());
-    stmtAtualizar.setBoolean(7, c.isSituacao());
-    stmtAtualizar.setInt(10, c.getId());
+    stmtAtualizar.setString(3, c.getPerfil());
+    stmtAtualizar.setBoolean(4, c.isSituacao());
+    stmtAtualizar.setBytes(5, pwd);
+    stmtAtualizar.setBytes(6, salt);
 
     System.out.println(stmtAtualizar);
 
@@ -123,16 +121,16 @@ public class UsuarioDAO {
       f.setPerfil(rs1.getString("perfil"));
       f.setNome(rs1.getString("nome"));
       f.setEmail(rs1.getString("email"));
-      f.setSenha(rs1.getString("senha"));
       f.setSituacao(rs1.getBoolean("situacao"));
     }
 
     return f;
   }
 
-  public void insereUsuario(Usuario c) throws SQLException, ParseException, NoSuchAlgorithmException, InvalidKeySpecException {
-        // INSERT INTO usuario (nome, email, senha, perfil, situacao, salt, pwd)
-    // VALUES                  (1,    2,     3,     4,      5,        6,    7  )
+  public void insereUsuario(Usuario c)
+          throws SQLException, ParseException, NoSuchAlgorithmException, InvalidKeySpecException {
+    // INSERT INTO usuario (nome, email, perfil, situacao, salt, pwd)
+    // VALUES              (1,    2,     3,      4,        5,    6 )
 
     String senha = c.getSenha();
 
@@ -142,11 +140,10 @@ public class UsuarioDAO {
 
     stmtInserir.setString(1, c.getNome());
     stmtInserir.setString(2, c.getEmail());
-    stmtInserir.setString(5, senha);
-    stmtInserir.setString(6, c.getPerfil());
-    stmtInserir.setBoolean(7, c.isSituacao());
-    stmtInserir.setBytes(10, salt);
-    stmtInserir.setBytes(11, pwd);
+    stmtInserir.setString(3, c.getPerfil());
+    stmtInserir.setBoolean(4, c.isSituacao());
+    stmtInserir.setBytes(5, salt);
+    stmtInserir.setBytes(6, pwd);
 
     System.out.println(stmtInserir);
 
@@ -169,7 +166,12 @@ public class UsuarioDAO {
 
     stmtAlteraSituacao.executeUpdate();
   }
-
+  /*
+   * metodo autenticar
+   * params: String email, String senha
+   * cruza os dados do usuário usando PasswordEcryptionService
+   * retorna um objeto usuário com dados válidos ou um usuário invalido com id -1
+   */
   public Usuario autenticar(String email, String senha) throws SQLException, NoSuchAlgorithmException, InvalidKeySpecException {
 
     Usuario f;

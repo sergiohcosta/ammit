@@ -1,7 +1,6 @@
 package beans;
 
 import java.io.Serializable;
-import java.text.ParseException;
 
 /**
  *
