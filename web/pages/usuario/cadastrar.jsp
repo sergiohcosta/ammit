@@ -107,8 +107,7 @@
                             $("#BoxNome").toggleClass("has-error");
                             $("#LabelNome").toggleClass("text-danger");
                             </c:if>
-                                
-                            </c:if>
+
                             <c:if test="${errEmail =='1'}">
                             $("#BoxEmail").toggleClass("has-error");
                             $("#LabelEmail").toggleClass("text-danger");

@@ -13,7 +13,7 @@ import java.security.spec.InvalidKeySpecException;
 public class UsuarioDAO {
 
   private Connection con = null;
-  private PreparedStatement stmtListar;
+  private PreparedStatement stmtListar, stmtListarProfessor;
   private PreparedStatement stmtAtualizar;
   private PreparedStatement stmtObtemUsuario;
   private PreparedStatement stmtObtemUsuarioByEmail;
@@ -26,6 +26,11 @@ public class UsuarioDAO {
     stmtListar = con.prepareStatement(
             "SELECT * FROM usuario"
     );
+    
+    stmtListarProfessor = con.prepareStatement(
+            "SELECT * FROM usuario WHERE perfil='Professor'"
+    );
+    
     stmtAtualizar = con.prepareStatement(
             "UPDATE usuario SET "
             + "nome = ?"
@@ -59,6 +64,28 @@ public class UsuarioDAO {
   }
 
   public List<Usuario> listarUsuarios() throws SQLException {
+
+    List<Usuario> listaUsuarios = new ArrayList<>();
+
+    ResultSet rs1 = stmtListar.executeQuery();
+
+    while (rs1.next()) {
+      Usuario c = new Usuario();
+      c.setId(rs1.getInt("id"));
+      c.setNome(rs1.getString("nome"));
+      c.setEmail(rs1.getString("email"));
+      c.setPerfil(rs1.getString("perfil"));
+      c.setSituacao(rs1.getBoolean("situacao"));
+
+      listaUsuarios.add(c);
+
+    }
+
+    return listaUsuarios;
+
+  }
+  
+  public List<Usuario> listarProfessores() throws SQLException {
 
     List<Usuario> listaUsuarios = new ArrayList<>();
 
