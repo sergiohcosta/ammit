@@ -3,6 +3,8 @@ package Controle.Questao;
 import Controle.Usuario.*;
 import Controle.Logica;
 import DAO.UsuarioDAO;
+import DAO.QuestaoDAO;
+import beans.Questao;
 import beans.Usuario;
 import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
@@ -20,13 +22,14 @@ public class Cadastrar implements Logica {
         System.out.println("Executando a logica " + this.getClass().getName() + " ...");
         
         UsuarioDAO uDao = new UsuarioDAO();
+        QuestaoDAO qDao = new QuestaoDAO();
         
         req.setAttribute("listaProfessores", uDao.listarProfessores());
         
         // So tenta processar informacoes se for um POST
         if (req.getMethod().equals("POST")) {
             
-            int usuarioId = Integer.parseInt(req.getParameter("id"));
+            int questaoId = Integer.parseInt(req.getParameter("id"));
 
             // seta a mensagem como cadastrado como sucesso     
             req.setAttribute("status", "1");
@@ -36,28 +39,29 @@ public class Cadastrar implements Logica {
             // TODO: implementar validacao nos campos que faltam e checar se há melhorias possíveis nas validações
             String perfil = req.getParameter("perfil");
 
-            String nome = req.getParameter("nome");
+            String titulo = req.getParameter("titulo");
 
-            if (nome.length() < 3) {
+            if (titulo.length() < 3) {
                 req.setAttribute("status", "0");
-                req.setAttribute("errNome", "1");
-                msgErro.add("O campo Nome deve conter pelo menos 3 caracteres");
+                req.setAttribute("errTitulo", "1");
+                msgErro.add("O campo Título deve conter pelo menos 3 caracteres");
             }
 
-            String email = req.getParameter("email");
+            String enunciado = req.getParameter("enunciado");
 
-            if (email.length() < 3) {
+            if (enunciado.length() < 3) {
                 req.setAttribute("status", "0");
-                req.setAttribute("errEmail", "1");
-                msgErro.add("O campo <b>Email</b> deve ser um endereço de email válido");
+                req.setAttribute("errEnunciado", "1");
+                msgErro.add("O campo <b>Enunciado</b> deve conter pelo menos 3 caracteres");
             }
 
-            String senha = req.getParameter("senha");
+            int professor = Integer.valueOf(req.getParameter("professor"));
+            
 
-            if (senha.length() < 3) {
+            if (professor <= 0) {
                 req.setAttribute("status", "0");
-                req.setAttribute("errSenha", "1");
-                msgErro.add("O campo <b>Senha</b> deve ser preenchido");
+                req.setAttribute("errProfessor", "1");
+                msgErro.add("O campo <b>Professor</b> deve ser selecionado");
             }
 
             req.setAttribute("msgErro", msgErro);
@@ -65,22 +69,21 @@ public class Cadastrar implements Logica {
 
             if (req.getAttribute("status").equals("1")) {
                 
-                Usuario p = new Usuario();
+                Questao q = new Questao();
 
-                p.setId(usuarioId);
-                p.setPerfil(perfil);
-                p.setNome(nome);
-                p.setEmail(email);
-                p.setSenha(senha);
+                q.setId(questaoId);
+                q.setTitulo(titulo);
+                q.setEnunciado(enunciado);
+                q.setProfessor(professor);
 
-                if (usuarioId == 0) {
-                    System.out.println("Cadastrando: " + p);
-                    uDao.insereUsuario(p);
+                if (questaoId == 0) {
+                    System.out.println("Cadastrando: " + q);
+                    qDao.insereQuestao(q);
 
                 } else {
 
-                    System.out.println("Editando: " + p);
-                    uDao.alteraUsuario(p);
+                    System.out.println("Editando: " + q);
+                    qDao.alteraQuestao(q);
                 }
             }
         } else {
@@ -88,7 +91,7 @@ public class Cadastrar implements Logica {
             String op = (String) req.getParameter("op");
             if ("editar".equals(op)) {
                 
-                req.setAttribute("p", uDao.obtemUsuario(Integer.valueOf(req.getParameter("pId"))));
+                req.setAttribute("p", qDao.obtemQuestao(Integer.valueOf(req.getParameter("pId"))));
 
             }
 

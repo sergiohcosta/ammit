@@ -75,9 +75,7 @@
                                 <textarea name="enunciado" placeholder="enunciado" id="enunciado"><jsp:getProperty name="p" property="enunciado" /></textarea>
                                 <p class="help-block">Digite o enunciado da questão</p>
                             </div>
-
-
-
+                                
                             <button type="submit" class="btn btn-default">Salvar</button>
                             <button type="reset" class="btn btn-default">Limpar</button>
 
