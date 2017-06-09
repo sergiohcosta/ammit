@@ -8,111 +8,114 @@ import java.util.List;
 
 public class QuestaoDAO {
 
-  private Connection con = null;
-  private PreparedStatement stmtListar;
-  private PreparedStatement stmtAtualizar;
-  private PreparedStatement stmtObtemQuestao;
-  private PreparedStatement stmtInserir;
+    private Connection con = null;
+    private PreparedStatement stmtListar, stmtAtualizar, stmtObtemQuestao, stmtInserir, stmtLastId;
 
-  public QuestaoDAO() throws SQLException, ClassNotFoundException {
-    con = ConnectionFactory.getConnection();
+    public QuestaoDAO() throws SQLException, ClassNotFoundException {
+        con = ConnectionFactory.getConnection();
 
-    stmtListar = con.prepareStatement(
-            "SELECT * FROM questao"
-    );
-    stmtAtualizar = con.prepareStatement(
-            "UPDATE questao SET "
-            + "titulo = ?"
-            + ",enunciado = ?"
-            + ",professor = ?"
-            + " WHERE id = ?"
-    );
-    stmtObtemQuestao = con.prepareStatement(
-            "SELECT * FROM questao WHERE id=?"
-    );
+        stmtLastId = con.prepareStatement("select LAST_INSERT_ID() as lastId");
 
-    stmtInserir = con.prepareStatement(
-            "INSERT INTO questao ("
-            + "titulo, enunciado, professor"
-            + ") VALUES ("
-            + "?, ?, ?"
-            + ")"
-    );
+        stmtListar = con.prepareStatement(
+                "SELECT * FROM questao"
+        );
+        stmtAtualizar = con.prepareStatement(
+                "UPDATE questao SET "
+                + "titulo = ?"
+                + ",enunciado = ?"
+                + ",professor = ?"
+                + " WHERE id = ?"
+        );
+        stmtObtemQuestao = con.prepareStatement(
+                "SELECT * FROM questao WHERE id=?"
+        );
 
-  }
-
-  public List<Questao> listarQuestoes() throws SQLException {
-
-    List<Questao> listaQuestoes = new ArrayList<>();
-
-    ResultSet rs1 = stmtListar.executeQuery();
-
-    while (rs1.next()) {
-      Questao q = new Questao();
-      q.setId(rs1.getInt("id"));
-      q.setTitulo(rs1.getString("titulo"));
-      q.setEnunciado(rs1.getString("enunciado"));
-      q.setProfessor(rs1.getInt("professor"));
-
-      listaQuestoes.add(q);
+        stmtInserir = con.prepareStatement(
+                "INSERT INTO questao ("
+                + "titulo, enunciado, professor"
+                + ") VALUES ("
+                + "?, ?, ?"
+                + ")"
+        );
 
     }
 
-    return listaQuestoes;
+    public List<Questao> listarQuestoes() throws SQLException {
 
-  }
+        List<Questao> listaQuestoes = new ArrayList<>();
 
-  public int alteraQuestao(Questao q)
-          throws SQLException {
-    /* 
+        ResultSet rs1 = stmtListar.executeQuery();
+
+        while (rs1.next()) {
+            Questao q = new Questao();
+            q.setId(rs1.getInt("id"));
+            q.setTitulo(rs1.getString("titulo"));
+            q.setEnunciado(rs1.getString("enunciado"));
+            q.setProfessor(rs1.getInt("professor"));
+
+            listaQuestoes.add(q);
+
+        }
+
+        return listaQuestoes;
+
+    }
+
+    public int alteraQuestao(Questao q)
+            throws SQLException {
+        /* 
      1 titulo = ?"
      2 + ",enunciado = ?"
      3 + ",professor = ?"
      4 + " WHERE id = ?" */
 
-    stmtAtualizar.setString(1, q.getTitulo());
-    stmtAtualizar.setString(2, q.getEnunciado());
-    stmtAtualizar.setInt(3, q.getProfessor());
-    stmtAtualizar.setInt(4, q.getId());
+        stmtAtualizar.setString(1, q.getTitulo());
+        stmtAtualizar.setString(2, q.getEnunciado());
+        stmtAtualizar.setInt(3, q.getProfessor());
+        stmtAtualizar.setInt(4, q.getId());
 
-    System.out.println(stmtAtualizar);
+        System.out.println(stmtAtualizar);
 
-    return stmtAtualizar.executeUpdate();
+        return stmtAtualizar.executeUpdate();
 
-  }
-
-  public Questao obtemQuestao(int id) throws SQLException {
-
-    stmtObtemQuestao.setInt(1, id);
-
-    ResultSet rs1 = stmtObtemQuestao.executeQuery();
-
-    Questao q = null;
-
-    if (rs1.next()) {
-      q = new Questao();
-      q.setId(rs1.getInt("id"));
-      q.setEnunciado(rs1.getString("enunciado"));
-      q.setTitulo(rs1.getString("titulo"));
-      q.setProfessor(rs1.getInt("professor"));
     }
 
-    return q;
-  }
+    public Questao obtemQuestao(int id) throws SQLException {
 
-  public void insereQuestao(Questao q)
-          throws SQLException {
-    // INSERT INTO questao (titulo, enunciado, professor)
-    // VALUES              (1,      2,         3        )
+        stmtObtemQuestao.setInt(1, id);
 
-    stmtInserir.setString(1, q.getTitulo());
-    stmtInserir.setString(2, q.getEnunciado());
-    stmtInserir.setInt   (3, q.getProfessor());
+        ResultSet rs1 = stmtObtemQuestao.executeQuery();
 
-    System.out.println(stmtInserir);
+        Questao q = null;
 
-    stmtInserir.executeUpdate();
+        if (rs1.next()) {
+            q = new Questao();
+            q.setId(rs1.getInt("id"));
+            q.setEnunciado(rs1.getString("enunciado"));
+            q.setTitulo(rs1.getString("titulo"));
+            q.setProfessor(rs1.getInt("professor"));
+        }
 
-  }
+        return q;
+    }
+
+    public int insereQuestao(Questao q)
+            throws SQLException {
+        // INSERT INTO questao (titulo, enunciado, professor)
+        // VALUES              (1,      2,         3        )
+
+        stmtInserir.setString(1, q.getTitulo());
+        stmtInserir.setString(2, q.getEnunciado());
+        stmtInserir.setInt(3, q.getProfessor());
+
+        System.out.println(stmtInserir);
+
+        stmtInserir.executeUpdate();
+
+        ResultSet rs1 = stmtLastId.executeQuery();
+        rs1.next();
+        return rs1.getInt("lastId");
+
+    }
 
 }

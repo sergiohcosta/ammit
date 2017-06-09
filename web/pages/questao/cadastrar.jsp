@@ -35,7 +35,7 @@
     <div class="col-lg-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                Dados do questão
+                Dados da questão
             </div>
             <div class="panel-body">
                 <div class="row">
@@ -72,7 +72,7 @@
 
                             <div id="BoxEnunciado" class="form-group">
                                 <label>Enunciado</label>
-                                <textarea name="enunciado" placeholder="enunciado" id="enunciado"><jsp:getProperty name="p" property="enunciado" /></textarea>
+                                <textarea name="enunciado" placeholder="enunciado" id="enunciado" class="form-control"><jsp:getProperty name="p" property="enunciado" /></textarea>
                                 <p class="help-block">Digite o enunciado da questão</p>
                             </div>
                                 
@@ -117,7 +117,6 @@
                                                 minlength: 3
                                             }
                                         }
-
                                     });</script>
                     </div>
                     <!-- /.col-lg-6 (nested) -->

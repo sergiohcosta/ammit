@@ -1,12 +1,17 @@
 package Controle.Questao;
 
-import Controle.Usuario.*;
-import Controle.Logica;
-import DAO.UsuarioDAO;
-import DAO.QuestaoDAO;
 import beans.Questao;
 import beans.Usuario;
+
+import Controle.Usuario.*;
+import Controle.Logica;
+
+import DAO.UsuarioDAO;
+import DAO.QuestaoDAO;
+
 import java.util.ArrayList;
+import javax.servlet.RequestDispatcher;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -37,7 +42,6 @@ public class Cadastrar implements Logica {
 
             // verificacao server-side do POST
             // TODO: implementar validacao nos campos que faltam e checar se há melhorias possíveis nas validações
-            String perfil = req.getParameter("perfil");
 
             String titulo = req.getParameter("titulo");
 
@@ -78,7 +82,12 @@ public class Cadastrar implements Logica {
 
                 if (questaoId == 0) {
                     System.out.println("Cadastrando: " + q);
-                    qDao.insereQuestao(q);
+                    int lastId = qDao.insereQuestao(q);
+                    q.setId(lastId);
+                    
+                    // em vez de mandar de volta pro formulario, manda pra parte 2 pra cadastrar casos de teste
+                    req.setAttribute("q", q);
+                    return "/pages/questao/redirect.jsp";
 
                 } else {
 
