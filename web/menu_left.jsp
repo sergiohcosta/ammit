@@ -39,6 +39,16 @@
             </ul>
             <!-- /.nav-second-level -->
         </li>
+        
+        <li class="MenuGerente">
+            <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i>Casos de Teste<span class="fa arrow"></span></a>
+            <ul class="nav nav-second-level">
+                <li>
+                    <a href="Controle?logica=Casosteste.SelecionaQuestao">Gerenciar</a>
+                </li>
+            </ul>
+            <!-- /.nav-second-level -->
+        </li>
 
         <li>
             <a href="Controle?logica=Acesso.Logout"><i class="fa fa-child fa-fw"></i>Logout</a>

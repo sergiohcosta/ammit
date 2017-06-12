@@ -9,7 +9,7 @@ import java.util.List;
 public class QuestaoDAO {
 
     private Connection con = null;
-    private PreparedStatement stmtListar, stmtAtualizar, stmtObtemQuestao, stmtInserir, stmtLastId;
+    private PreparedStatement stmtListar, stmtAtualizar, stmtObtemQuestao, stmtInserir, stmtLastId,stmtRemover;
 
     public QuestaoDAO() throws SQLException, ClassNotFoundException {
         con = ConnectionFactory.getConnection();
@@ -36,6 +36,10 @@ public class QuestaoDAO {
                 + ") VALUES ("
                 + "?, ?, ?"
                 + ")"
+        );
+        
+        stmtRemover = con.prepareStatement(
+                "DELETE FROM questao WHERE id=?"
         );
 
     }
@@ -86,10 +90,9 @@ public class QuestaoDAO {
 
         ResultSet rs1 = stmtObtemQuestao.executeQuery();
 
-        Questao q = null;
+        Questao q = new Questao();
 
         if (rs1.next()) {
-            q = new Questao();
             q.setId(rs1.getInt("id"));
             q.setEnunciado(rs1.getString("enunciado"));
             q.setTitulo(rs1.getString("titulo"));
@@ -116,6 +119,14 @@ public class QuestaoDAO {
         rs1.next();
         return rs1.getInt("lastId");
 
+    }    
+
+    public void removerQuestao(Questao q) throws SQLException  {
+        stmtRemover.setInt(1, q.getId());
+
+        System.out.println(stmtRemover);
+
+        stmtRemover.executeUpdate();
     }
 
 }

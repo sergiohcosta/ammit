@@ -51,12 +51,8 @@
                                 <select name="professor" id="professor" class="form-control">
                                     <option value="">--- Selecione ---</option>
                                     <c:forEach var="lp" items="${listaProfessores}">
-                                        <c:if test="${lp.id==p.id}">
-                                            <option value="${lp.id}" selected>
-                                            </c:if>
-                                            <c:if test="${lp.id!=p.id}">
-                                            <option value="${lp.id}">
-                                            </c:if>                      
+                                       
+                                        <option  <c:if test="${lp.id==p.professor}"> selected</c:if> value="${lp.id}">                 
                                             ${lp.nome}
                                         </option>
                                     </c:forEach>

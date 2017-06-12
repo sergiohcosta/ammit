@@ -87,7 +87,8 @@ public class Cadastrar implements Logica {
                     
                     // em vez de mandar de volta pro formulario, manda pra parte 2 pra cadastrar casos de teste
                     req.setAttribute("q", q);
-                    return "/pages/questao/redirect.jsp";
+                    req.setAttribute("redirTo", "CasoTesteGerenciar");
+                    return "/pages/redirect.jsp";
 
                 } else {
 
