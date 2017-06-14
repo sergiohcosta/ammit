@@ -1,6 +1,5 @@
 // Generated from Ammit.g4 by ANTLR 4.5.3
 package Ammit;
-
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -119,6 +118,18 @@ public class AmmitBaseListener implements AmmitListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitRepeat(AmmitParser.RepeatContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterSigint(AmmitParser.SigintContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSigint(AmmitParser.SigintContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

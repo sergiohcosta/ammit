@@ -7,6 +7,7 @@ package Input;
 import Ammit.AmmitBaseListener;
 import Ammit.AmmitLexer;
 import Ammit.AmmitParser;
+import com.mifmif.common.regex.Generex;
 import java.util.Random;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -19,7 +20,8 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
  */
 public class InputGenerator extends AmmitBaseListener {
     private String output;
-    private int min, max, rep;
+    private int min, max, rep, lastSigint;
+    private boolean proceed;
     private final int MAXINT=32767;
     private final int MININT=-32768;
     private ParseTreeWalker walker;
@@ -47,6 +49,8 @@ public class InputGenerator extends AmmitBaseListener {
     @Override
     public void enterRow(AmmitParser.RowContext ctx){
         output="";
+        proceed=true;
+        rep=1;
     }
     
     @Override
@@ -61,32 +65,49 @@ public class InputGenerator extends AmmitBaseListener {
     
     @Override
     public void exitNint(AmmitParser.NintContext ctx){
-        Random rnd=new Random();
-        int i,x;
-        for(i=0; i<rep; i++){
-            x=rnd.nextInt(max-min+1)+min;
-            output += " " +x;
+        if(proceed){
+            Random rnd=new Random();
+            int i,x;
+            if (max<min){
+                x=min;
+                min=max;
+                max=x;
+            }
+            for(i=0; i<rep; i++){
+                x=rnd.nextInt(max-min+1)+min;
+                output += " " +x;
+            }
         }
     }
     
     @Override
+    public void exitSigint(AmmitParser.SigintContext ctx){
+        lastSigint = Integer.valueOf(ctx.getText());
+    }
+    
+    @Override
     public void exitMax(AmmitParser.MaxContext ctx){
-        max=Integer.valueOf(ctx.INT().getText());
+        max=lastSigint;
     }
     
     @Override
     public void exitMin(AmmitParser.MinContext ctx){
-        min=Integer.valueOf(ctx.INT().getText());
+        min=lastSigint;
     }
     
     @Override
     public void exitNconst(AmmitParser.NconstContext ctx) {
-        output += " " +ctx.INT().getText();
+        output += " " +lastSigint;
     }
     
     
     @Override
     public void exitRepeat(AmmitParser.RepeatContext ctx) {
-        rep=Integer.valueOf(ctx.INT().getText());
+        try{rep=Integer.valueOf(ctx.INT().getText());}catch (Exception e){proceed=false;}
+    }
+    
+    @Override
+    public void exitStrregex(AmmitParser.StrregexContext ctx) {
+        output += " " + new Generex(ctx.STR().getText().replaceAll("\"", "")).random();
     }
 }

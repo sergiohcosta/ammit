@@ -98,6 +98,16 @@ public interface AmmitListener extends ParseTreeListener {
 	 */
 	void exitRepeat(AmmitParser.RepeatContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link AmmitParser#sigint}.
+	 * @param ctx the parse tree
+	 */
+	void enterSigint(AmmitParser.SigintContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link AmmitParser#sigint}.
+	 * @param ctx the parse tree
+	 */
+	void exitSigint(AmmitParser.SigintContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link AmmitParser#strregex}.
 	 * @param ctx the parse tree
 	 */
