@@ -11,6 +11,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import Input.*;
+
 /**
  *
  * @author sergio
@@ -25,7 +27,16 @@ public class Ammit implements Logica {
         String seed = req.getParameter("seed");
         int qtde = Integer.parseInt(req.getParameter("qtde"));
         
-        req.setAttribute("gerado", "Você pediu para gerar " + qtde + " para a seed " + seed);
+        InputGenerator ig = new InputGenerator(seed);
+        
+        String output = "";
+        
+        for(int i=0; i<qtde; i++) {
+            output += "\n" + ig.generate();
+        }
+        
+        
+        req.setAttribute("gerado", output);
         
         return "/pages/casoteste/ammit.jsp";
 
