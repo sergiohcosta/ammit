@@ -1,16 +1,13 @@
 package Controle.Questao;
 
 import beans.Questao;
-import beans.Usuario;
 
-import Controle.Usuario.*;
 import Controle.Logica;
 
 import DAO.UsuarioDAO;
 import DAO.QuestaoDAO;
 
 import java.util.ArrayList;
-import javax.servlet.RequestDispatcher;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

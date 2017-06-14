@@ -1,10 +1,20 @@
 package Controle.Casoteste;
 
+import Controle.Questao.*;
+import beans.Questao;
+import beans.Usuario;
+
 import Controle.Usuario.*;
 import Controle.Logica;
+import DAO.CasotesteDAO;
+
 import DAO.UsuarioDAO;
-import beans.Usuario;
+import DAO.QuestaoDAO;
+import beans.Casoteste;
+
 import java.util.ArrayList;
+import javax.servlet.RequestDispatcher;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,13 +28,36 @@ public class Cadastrar implements Logica {
     public String executa(HttpServletRequest req, HttpServletResponse res) throws Exception {
 
         System.out.println("Executando a logica " + this.getClass().getName() + " ...");
+
+        //UsuarioDAO uDao = new UsuarioDAO();
+        //req.setAttribute("listaProfessores", uDao.listarProfessores());
+        QuestaoDAO qDao = new QuestaoDAO();
+        CasotesteDAO ctDao = new CasotesteDAO();
+        Casoteste cteste;
         
-        UsuarioDAO fDao = new UsuarioDAO();
+        Questao q;
+        int questaoId = 0;
+
+        try {
+            questaoId = Integer.parseInt(req.getParameter("qId"));
+            qDao = new QuestaoDAO();
+            q = qDao.obtemQuestao(questaoId);
+
+            if (q.getId() < 1) {
+                throw new NumberFormatException();
+            }
+            
+            req.setAttribute("q", q);
+
+        } catch (NumberFormatException e) {
+            req.setAttribute("status", 0);
+            req.setAttribute("msgErro", "Selecione uma questão para gerenciar seus Casos de Teste");
+            req.setAttribute("redirTo", "QuestaoGerenciar");
+            return "/pages/redirect.jsp";
+        }
 
         // So tenta processar informacoes se for um POST
         if (req.getMethod().equals("POST")) {
-            
-            int usuarioId = Integer.parseInt(req.getParameter("id"));
 
             // seta a mensagem como cadastrado como sucesso     
             req.setAttribute("status", "1");
@@ -32,67 +65,64 @@ public class Cadastrar implements Logica {
 
             // verificacao server-side do POST
             // TODO: implementar validacao nos campos que faltam e checar se há melhorias possíveis nas validações
-            String perfil = req.getParameter("perfil");
+            String titulo = req.getParameter("titulo");
 
-            String nome = req.getParameter("nome");
-
-            if (nome.length() < 3) {
+            if (titulo.length() < 3) {
                 req.setAttribute("status", "0");
-                req.setAttribute("errNome", "1");
-                msgErro.add("O campo Nome deve conter pelo menos 3 caracteres");
+                req.setAttribute("errTitulo", "1");
+                msgErro.add("O campo Título deve conter pelo menos 3 caracteres");
             }
 
-            String email = req.getParameter("email");
+            String conteudo = req.getParameter("conteudo");
 
-            if (email.length() < 3) {
+            if (conteudo.length() < 3) {
                 req.setAttribute("status", "0");
-                req.setAttribute("errEmail", "1");
-                msgErro.add("O campo <b>Email</b> deve ser um endereço de email válido");
-            }
-
-            String senha = req.getParameter("senha");
-
-            if (senha.length() < 3) {
-                req.setAttribute("status", "0");
-                req.setAttribute("errSenha", "1");
-                msgErro.add("O campo <b>Senha</b> deve ser preenchido");
+                req.setAttribute("errConteudo", "1");
+                msgErro.add("O campo <b>Conteudo</b> deve conter pelo menos 3 caracteres");
             }
 
             req.setAttribute("msgErro", msgErro);
             System.out.println("Erros encontrados: " + msgErro.size());
 
             if (req.getAttribute("status").equals("1")) {
+
                 
-                Usuario p = new Usuario();
+                cteste = new Casoteste();
 
-                p.setId(usuarioId);
-                p.setPerfil(perfil);
-                p.setNome(nome);
-                p.setEmail(email);
-                p.setSenha(senha);
+                cteste.setId(questaoId);
+                cteste.setQuestao(questaoId);
+                cteste.setTitulo(titulo);
+                cteste.setConteudo(conteudo);
 
-                if (usuarioId == 0) {
-                    System.out.println("Cadastrando: " + p);
-                    fDao.insereUsuario(p);
+
+                if (questaoId == 0) {
+                    System.out.println("Cadastrando: " + q);
+                    int lastId = ctDao.insereCasoteste(cteste);
+                    //q.setId(lastId);
+
+                    // em vez de mandar de volta pro formulario, manda pra parte 2 pra cadastrar casos de teste
+                    //req.setAttribute("q", q);
+                    //req.setAttribute("redirTo", "CasoTesteGerenciar");
+                    //return "/pages/redirect.jsp";
 
                 } else {
 
-                    System.out.println("Editando: " + p);
-                    fDao.alteraUsuario(p);
+                    System.out.println("Editando: " + q);
+                    ctDao.alteraCasoteste(cteste);
                 }
             }
         } else {
 
             String op = (String) req.getParameter("op");
             if ("editar".equals(op)) {
-                
-                req.setAttribute("p", fDao.obtemUsuario(Integer.valueOf(req.getParameter("pId"))));
+
+                req.setAttribute("p", ctDao.obtemCasoteste(Integer.valueOf(req.getParameter("qId"))));
 
             }
 
         }
 
-        return "/pages/usuario/cadastrar.jsp";
+        return "/pages/casoteste/cadastrar.jsp";
 
     }
 

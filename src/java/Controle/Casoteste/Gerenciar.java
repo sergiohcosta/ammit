@@ -23,10 +23,11 @@ public class Gerenciar implements Logica {
             Questao q = qDao.obtemQuestao(questaoId);
 
             if (q.getId() < 1) {
-                return "/pages/questao/selecionaquestao.jsp";
+                throw new NumberFormatException();
             }
 
             req.setAttribute("q", q);
+            return "/pages/casoteste/gerenciar.jsp";
 
         } catch (NumberFormatException e) {
             req.setAttribute("status", 0);
@@ -34,8 +35,7 @@ public class Gerenciar implements Logica {
             req.setAttribute("redirTo", "QuestaoGerenciar");
             return "/pages/redirect.jsp";
         }
-        
-        return "/pages/casoteste/gerenciar.jsp";
+
     }
 
 }

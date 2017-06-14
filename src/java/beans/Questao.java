@@ -18,8 +18,8 @@ public class Questao implements Serializable {
         return id;
     }
 
-    public void setId(int pessoaId) {
-        this.id = pessoaId;
+    public void setId(int questaoId) {
+        this.id = questaoId;
     }
 
     private String titulo = "";

@@ -3,9 +3,13 @@
 
 <%@include file="/header.jsp" %>
 
+<jsp:useBean id="p" class="beans.Casoteste" scope="request">
+    <jsp:setProperty name="p" property="*"/>
+</jsp:useBean>
+
 <div class="row">
     <div class="col-lg-12">
-        <h1 class="page-header">Casos de teste da Questão <jsp:getProperty name="q" property="titulo" /></h1>
+        <h1 class="page-header">Casos de teste</h1>
     </div>
     <!-- /.col-lg-12 -->
 </div>
@@ -28,6 +32,32 @@
 
     </div>
 </c:if>
+
+<div class="row">
+    <div class="col-lg-12">
+        
+        <div class="form-group">
+            <label>Questão:</label> "${q.titulo}"
+        </div>
+        <div class="form-group">
+            <label>Enunciado:</label> "${q.enunciado}"
+        </div>
+
+        <div id="BoxTítulo" class="form-group">
+            <label>Título</label>
+            <input class="form-control" name="titulo" placeholder="titulo" id="titulo" value="<jsp:getProperty name="p" property="titulo" />">
+            <p class="help-block">Digite o titulo do caso de teste</p>
+        </div>
+
+        <div id="BoxConteudo" class="form-group">
+            <label>Conteúdo</label>
+            <textarea name="conteudo" placeholder="conteudo" id="conteudo" class="form-control"><jsp:getProperty name="p" property="conteudo" /></textarea>
+            <p class="help-block">Digite o enunciado da questão</p>
+        </div>
+
+    </div>
+</div>
+
 
 <div class="row">
     <div class="col-lg-12">
@@ -89,7 +119,7 @@
                             <label>Linguagem do código fonte:</label>
                             <select id="qtde" name="qtde">
                                 <option value="C">C</option>
-                                
+
                             </select>
                         </div>
 
