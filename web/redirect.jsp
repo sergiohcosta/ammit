@@ -7,3 +7,7 @@
 <c:if test="${redirTo == 'QuestaoGerenciar'}">
 <c:redirect url="/Controle?logica=Questao.Gerenciar"/>
 </c:if>
+
+<c:if test="${redirTo == 'AcessoLogin'}">
+<c:redirect url="/Controle?logica=Acesso.Login&msg=success"/>
+</c:if>

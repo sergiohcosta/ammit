@@ -70,6 +70,9 @@
                             <c:if test="${msg=='logout'}">
                                 <div class="alert alert-warning" role="alert">Logout efetuado com sucesso.</div>
                             </c:if>
+                            <c:if test="${msg=='success'}">
+                                <div class="alert alert-success" role="alert">Usuário criado com sucesso.</div>
+                            </c:if>
                             <form role="form" action="Controle" method="post">
                                 <input type="hidden" name="logica" value="Acesso.Login">
                                 <fieldset>
@@ -84,8 +87,9 @@
 
                                 </fieldset>
                             </form>
+                        
+                            <center><a href="Controle?logica=Acesso.CriarUsuario">Criar conta</a></center>
                         </div>
-
                     </div>
                     <br><br>
                     Logins para testes
