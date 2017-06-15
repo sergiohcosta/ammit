@@ -22,6 +22,11 @@
 
 <div class="row">
     <div class="col-lg-10">
+        
+        <div class="form-group">
+            <label>Questão:</label> "${q.titulo}"<br>
+            <label>Enunciado:</label> "${q.enunciado}"
+        </div>
 
         <c:if test="${status=='0'}">
             <div class="panel panel-red">

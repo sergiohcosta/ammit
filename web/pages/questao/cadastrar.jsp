@@ -1,6 +1,6 @@
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
+<%@include file="/auth.jsp" %>
 <%@include file="/header.jsp" %>
 
 <jsp:useBean id="p" class="beans.Questao" scope="request">
@@ -46,19 +46,20 @@
                         <form role="form" id="questao_cadastrar_form" method="post" action="Controle" >
                             <input type="hidden" name="logica" value="Questao.Cadastrar">
                             <input type="hidden" name="id" value="<jsp:getProperty name="p" property="id" />">
-                            <div id="BoxProfessor" class="form-group">
-                                <label>Professor</label>
-                                <select name="professor" id="professor" class="form-control">
-                                    <option value="">--- Selecione ---</option>
-                                    <c:forEach var="lp" items="${listaProfessores}">
-                                       
-                                        <option  <c:if test="${lp.id==p.professor}"> selected</c:if> value="${lp.id}">                 
-                                            ${lp.nome}
-                                        </option>
-                                    </c:forEach>
-                                </select>
-                                <p class="help-block">Selecione o professor</p>
-                            </div>
+                            <c:choose><c:when test="${sessionScope.usuario.perfil=='Professor'}"><input type='hidden' name='professor' value='${sessionScope.usuario.id}'></c:when>
+                                <c:otherwise><div id="BoxProfessor" class="form-group">
+                                        <label>Professor</label>
+                                        <select name="professor" id="professor" class="form-control">
+                                            <option value="">--- Selecione ---</option>
+                                            <c:forEach var="lp" items="${listaProfessores}">
+
+                                                <option  <c:if test="${lp.id==p.professor}"> selected</c:if> value="${lp.id}">                 
+                                                    ${lp.nome}
+                                                </option>
+                                            </c:forEach>
+                                        </select>
+                                        <p class="help-block">Selecione o professor</p>
+                                    </div></c:otherwise></c:choose>
 
                             <div id="BoxTítulo" class="form-group">
                                 <label>Título</label>
@@ -71,7 +72,7 @@
                                 <textarea name="enunciado" placeholder="enunciado" id="enunciado" class="form-control"><jsp:getProperty name="p" property="enunciado" /></textarea>
                                 <p class="help-block">Digite o enunciado da questão</p>
                             </div>
-                                
+
                             <button type="submit" class="btn btn-default">Salvar</button>
                             <button type="reset" class="btn btn-default">Limpar</button>
 

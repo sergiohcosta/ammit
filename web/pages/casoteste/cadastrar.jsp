@@ -82,7 +82,7 @@
                     <div class="col-lg-6">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                               Exemplos de Entradas Geradas pelo Ammit
+                                Exemplos de Entradas Geradas pelo Ammit
                             </div>
                             <div class="panel-body" id="AmmitGeracao">
                             </div>
@@ -105,8 +105,6 @@
     </div>
 </div>
 
-
-
 <div class="row">
     <div class="col-lg-12">
         <div class="panel panel-default">
@@ -114,51 +112,53 @@
                 Saídas
             </div>
             <div class="panel-body">
-                <div class="row">
-                    <div class="col-lg-6">
-
-                        <div id="BoxAmmit" class="form-group">
-                            <input type="radio" name="tipo_saidas">
-                            <label>Utilize seu próprio código fonte para validar as entradas</label>
-                            <input type="file" class="form-control" name="codigofonte" placeholder="codigofonte" id="codigofonte">
-                            <label>Linguagem do código fonte:</label>
-                            <select id="codigofonte_linguagem" name="codigofonte_linguagem">
-                                <option value="C">C</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <input type="radio" name="tipo_saidas">
-                            <label>Digitar saídas manualmente</label>
-                        </div>
-
-                        <div id="BoxSaidasManual" class="form-group">
-                            <textarea style="width:100%; height: 200px;" name="saida" placeholder="saida" id="saida" class="form-control"></textarea>
-                        </div>
-
-                    </div>
-                    <!-- /.col-lg-6 (nested) -->
+                <div class="form-group">
+                    <input type="radio" name="tipo_saidas" class="tipo_saidas" id="tipo_saidas_codigo">
+                    <label>Utilize seu próprio código fonte para validar as entradas</label>
                 </div>
-                <!-- /.row (nested) -->
+                <div id="BoxSaidasCodigo" class="row">
+                    <div class="col-lg-6">
+                        <input type="file" class="form-control" name="codigofonte" placeholder="codigofonte" id="codigofonte">
+                        <label>Linguagem do código fonte:</label>
+                        <select id="codigofonte_linguagem" name="codigofonte_linguagem">
+                            <option value="C">C</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="radio" name="tipo_saidas" class="tipo_saidas" id="tipo_saidas_codigo">
+                    <label>Insira manualmente suas saídas</label>
+                </div>
+                <div id="BoxSaidasManual" class="row">
+                    <div class="col-lg-6">
+                        <textarea style="width:100%; height: 200px;" name="saida" placeholder="saida" id="saida" class="form-control"></textarea>
+                    </div>
+
+                </div>
             </div>
-            <!-- /.panel-body -->
         </div>
-        <!-- /.panel -->
     </div>
-    <!-- /.col-lg-12 -->
 </div>
+
+<button type="submit" class="btn btn-default">Salvar</button>
+<button type="reset" class="btn btn-default">Limpar</button>
+
+<br><br>
 
 <script>
 
     $("#tipo_entradas_ammit").attr("checked", true);
     desativarEntradaManual();
 
+    $("#tipo_saidas_codigo").attr("checked", true);
+    desativarSaidaManual();
+
     $("#gerar").click(function () {
         $.get("Controle?logica=Casoteste.Ammit", {seed: $("#ammit_seed").val(), qtde: $("#ammit_qtde").val()}, function () {})
                 .done(function (data) {
-                    if($("#entrada").val().length==0)
+                    if ($("#entrada").val().length == 0)
                         $("#entrada").val(data);
-            
+
                     $("#AmmitGeracao").html(data.replace(/\n/g, "<br>"));
                 })
                 .fail(function () {
@@ -174,15 +174,34 @@
         }
     });
 
+    $(".tipo_saidas").click(function () {
+        if ($("#tipo_saidas_codigo").is(':checked')) {
+            desativarSaidaManual();
+        } else {
+            desativarSaidaCodigo();
+        }
+    });
+
     function desativarEntradaAmmit() {
-        //alert("desativar ammit");
+
         $("#BoxEntradasAmmit").hide();
         $("#BoxEntradasManual").show();
     }
     function desativarEntradaManual() {
-        //alert("desativar manual");
+
         $("#BoxEntradasAmmit").show();
         $("#BoxEntradasManual").hide();
+    }
+
+    function desativarSaidaCodigo() {
+
+        $("#BoxSaidasCodigo").hide();
+        $("#BoxSaidasManual").show();
+    }
+    function desativarSaidaManual() {
+
+        $("#BoxSaidasCodigo").show();
+        $("#BoxSaidasManual").hide();
     }
 
 </script>

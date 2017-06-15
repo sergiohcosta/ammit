@@ -1,8 +1,3 @@
-<%-- 
-    Document   : login
-    Created on : 16/10/2015, 18:47:00
-    Author     : sergio
---%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <!DOCTYPE html>

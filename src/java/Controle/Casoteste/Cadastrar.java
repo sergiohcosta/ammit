@@ -17,10 +17,6 @@ import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- *
- * @author sergio
- */
 public class Cadastrar implements Logica {
 
     @Override
@@ -52,7 +48,7 @@ public class Cadastrar implements Logica {
             req.setAttribute("status", 0);
             req.setAttribute("msgErro", "Selecione uma questão para gerenciar seus Casos de Teste");
             req.setAttribute("redirTo", "QuestaoGerenciar");
-            return "/pages/redirect.jsp";
+            return "/redirect.jsp";
         }
 
         // So tenta processar informacoes se for um POST
@@ -133,7 +129,7 @@ public class Cadastrar implements Logica {
                     // em vez de mandar de volta pro formulario, manda pra parte 2 pra cadastrar casos de teste
                     //req.setAttribute("q", q);
                     //req.setAttribute("redirTo", "CasoTesteGerenciar");
-                    //return "/pages/redirect.jsp";
+                    //return "/redirect.jsp";
 
                 } else {
 
