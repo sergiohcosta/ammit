@@ -35,11 +35,9 @@
 
 <div class="row">
     <div class="col-lg-12">
-        
+
         <div class="form-group">
-            <label>Questão:</label> "${q.titulo}"
-        </div>
-        <div class="form-group">
+            <label>Questão:</label> "${q.titulo}"<br>
             <label>Enunciado:</label> "${q.enunciado}"
         </div>
 
@@ -58,7 +56,6 @@
     </div>
 </div>
 
-
 <div class="row">
     <div class="col-lg-12">
         <div class="panel panel-default">
@@ -66,41 +63,49 @@
                 Entradas
             </div>
             <div class="panel-body">
-                <div class="row">
+                <div class="form-group">
+                    <input type="radio" name="tipo_entradas" class="tipo_entradas" id="tipo_entradas_ammit">
+                    <label>Utilize o Ammit para gerar entradas</label>
+                </div>
+                <div id="BoxEntradasAmmit" class="row">
                     <div class="col-lg-6">
-
-                        <div id="BoxAmmit" class="form-group">
-                            <input type="radio" name="tipo_entradas">
-                            <label>Utilize a sintaxe Ammit para gerar entradas</label>
-                            <input class="form-control" name="ammit" placeholder="ammit" id="ammit">
-                            <label>Quantidade de linhas:</label>
-                            <select id="qtde" name="qtde">
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                            </select>
-                            <button id="gerar">Gerar</button>
-                        </div>
-
-                        <div id="BoxEntradasManual" class="form-group">
-                            <input type="radio" name="tipo_entradas">
-                            <label>Digite ou ajuste a lista de entradas conforme suas necessidades</label>
-                            <textarea style="width:100%" name="EntradasManual" placeholder="EntradasManual" id="EntradasManual" class="form-control" style="width: 100%"></textarea>
+                        <label>Sintaxe Ammit</label>
+                        <input class="form-control" name="ammit_seed" placeholder="Sintaxe Ammit" id="ammit_seed">
+                        <label>Quantidade de linhas:</label>
+                        <select id="ammit_qtde" name="ammit_qtde">
+                            <c:forEach begin="1" end="100" varStatus="loop">
+                                <option value="<c:out value="${loop.current}"/>"><c:out value="${loop.current}"/></option>
+                            </c:forEach>
+                        </select>
+                        <button id="gerar">Gerar</button>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                               Exemplos de Entradas Geradas pelo Ammit
+                            </div>
+                            <div class="panel-body" id="AmmitGeracao">
+                            </div>
                         </div>
 
                     </div>
-                    <!-- /.col-lg-6 (nested) -->
                 </div>
-                <!-- /.row (nested) -->
+                <div class="form-group">
+                    <input type="radio" name="tipo_entradas" id="tipo_entradas_manual" class="tipo_entradas">
+                    <label>Digitar entradas manualmente</label>
+                </div>
+                <div id="BoxEntradasManual" class="row">
+                    <div class="col-lg-6">
+                        <textarea style="width:100%; height: 200px;" name="entrada" placeholder="entrada" id="entrada" class="form-control"></textarea>
+                    </div>
+
+                </div>
             </div>
-            <!-- /.panel-body -->
         </div>
-        <!-- /.panel -->
     </div>
-    <!-- /.col-lg-12 -->
 </div>
+
+
 
 <div class="row">
     <div class="col-lg-12">
@@ -115,18 +120,20 @@
                         <div id="BoxAmmit" class="form-group">
                             <input type="radio" name="tipo_saidas">
                             <label>Utilize seu próprio código fonte para validar as entradas</label>
-                            <input type="file" class="form-control" name="sourcecoide" placeholder="sourcecode" id="sourcecode">
+                            <input type="file" class="form-control" name="codigofonte" placeholder="codigofonte" id="codigofonte">
                             <label>Linguagem do código fonte:</label>
-                            <select id="qtde" name="qtde">
+                            <select id="codigofonte_linguagem" name="codigofonte_linguagem">
                                 <option value="C">C</option>
-
                             </select>
                         </div>
 
-                        <div id="BoxEntradasManual" class="form-group">
+                        <div class="form-group">
                             <input type="radio" name="tipo_saidas">
-                            <label>Digite ou ajuste a lista de saídas conforme suas necessidades</label>
-                            <textarea style="width:100%" name="EntradasManual" placeholder="EntradasManual" id="EntradasManual" class="form-control" style="width: 100%"></textarea>
+                            <label>Digitar saídas manualmente</label>
+                        </div>
+
+                        <div id="BoxSaidasManual" class="form-group">
+                            <textarea style="width:100%; height: 200px;" name="saida" placeholder="saida" id="saida" class="form-control"></textarea>
                         </div>
 
                     </div>
@@ -143,16 +150,40 @@
 
 <script>
 
+    $("#tipo_entradas_ammit").attr("checked", true);
+    desativarEntradaManual();
 
     $("#gerar").click(function () {
-        $.get("Controle?logica=Casoteste.Ammit", {seed: $("#ammit").val(), qtde: $("#qtde").val()}, function () {})
+        $.get("Controle?logica=Casoteste.Ammit", {seed: $("#ammit_seed").val(), qtde: $("#ammit_qtde").val()}, function () {})
                 .done(function (data) {
-                    $("#EntradasManual").val(data);
+                    if($("#entrada").val().length==0)
+                        $("#entrada").val(data);
+            
+                    $("#AmmitGeracao").html(data.replace(/\n/g, "<br>"));
                 })
                 .fail(function () {
-                    alert("Ocorreu um erro ao tentar alterar a situação");
+                    alert("Ocorreu um erro ao tentar gerar entradas");
                 });
     });
+
+    $(".tipo_entradas").click(function () {
+        if ($("#tipo_entradas_ammit").is(':checked')) {
+            desativarEntradaManual();
+        } else {
+            desativarEntradaAmmit();
+        }
+    });
+
+    function desativarEntradaAmmit() {
+        //alert("desativar ammit");
+        $("#BoxEntradasAmmit").hide();
+        $("#BoxEntradasManual").show();
+    }
+    function desativarEntradaManual() {
+        //alert("desativar manual");
+        $("#BoxEntradasAmmit").show();
+        $("#BoxEntradasManual").hide();
+    }
 
 </script>
 

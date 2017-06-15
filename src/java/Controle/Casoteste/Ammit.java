@@ -1,22 +1,11 @@
 package Controle.Casoteste;
 
-import Controle.Usuario.*;
 import Controle.Logica;
-import DAO.QuestaoDAO;
-import DAO.UsuarioDAO;
-import beans.Questao;
-import beans.Usuario;
-import java.util.ArrayList;
-import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import Input.*;
 
-/**
- *
- * @author sergio
- */
 public class Ammit implements Logica {
 
     @Override
@@ -31,9 +20,10 @@ public class Ammit implements Logica {
         
         String output = "";
         
-        for(int i=0; i<qtde; i++) {
-            output += "\n" + ig.generate();
+        for(int i=1; i<=qtde; i++) {
+            output += ig.generate() + "\n<--FIM-->\n";
         }
+        output = output.substring(0,output.length()-1);
         
         
         req.setAttribute("gerado", output);

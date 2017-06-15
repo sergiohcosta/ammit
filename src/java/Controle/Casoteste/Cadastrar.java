@@ -13,7 +13,6 @@ import DAO.QuestaoDAO;
 import beans.Casoteste;
 
 import java.util.ArrayList;
-import javax.servlet.RequestDispatcher;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -80,13 +79,44 @@ public class Cadastrar implements Logica {
                 req.setAttribute("errConteudo", "1");
                 msgErro.add("O campo <b>Conteudo</b> deve conter pelo menos 3 caracteres");
             }
+            
+            String ammit_seed = req.getParameter("ammit_seed");
+
+            if (ammit_seed.length() < 3) {
+                req.setAttribute("status", "0");
+                req.setAttribute("errAmmitSeed", "1");
+                msgErro.add("O campo <b>Sintaxe Ammit</b> deve conter pelo menos 3 caracteres");
+            }
+            
+            String ammit_qtde = req.getParameter("ammit_qtde");
+
+            if (ammit_qtde.length() < 3) {
+                req.setAttribute("status", "0");
+                req.setAttribute("errAmmitQtde", "1");
+                msgErro.add("A <b>Quantidade de linhas</b> deve ser pelo menos 1");
+            }
+            
+            String entrada = req.getParameter("entrada");
+            // TODO: validar isso somente se entrada manual for selecionada
+            if (entrada.length() < 3) {
+                req.setAttribute("status", "0");
+                req.setAttribute("errEntrada", "1");
+                msgErro.add("O campo <b>Entrada</b> deve conter pelo menos 3 caracteres");
+            }
+            
+            String saida = req.getParameter("saida");
+            // TODO: validar isso somente se saida manual for selecionada
+            if (saida.length() < 3) {
+                req.setAttribute("status", "0");
+                req.setAttribute("errEntrada", "1");
+                msgErro.add("O campo <b>Saída</b> deve conter pelo menos 3 caracteres");
+            }
 
             req.setAttribute("msgErro", msgErro);
             System.out.println("Erros encontrados: " + msgErro.size());
 
             if (req.getAttribute("status").equals("1")) {
 
-                
                 cteste = new Casoteste();
 
                 cteste.setId(questaoId);
@@ -110,6 +140,7 @@ public class Cadastrar implements Logica {
                     System.out.println("Editando: " + q);
                     ctDao.alteraCasoteste(cteste);
                 }
+                
             }
         } else {
 
