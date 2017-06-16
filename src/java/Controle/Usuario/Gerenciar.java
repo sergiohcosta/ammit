@@ -18,14 +18,16 @@ public class Gerenciar implements Logica {
     public String executa(HttpServletRequest req, HttpServletResponse res) throws Exception {
 
         System.out.println("Executando a logica  " + this.getClass().getName() + " ...");
-        
+
         List<Usuario> usuarios = new ArrayList<>();
         UsuarioDAO usuarioDao = new UsuarioDAO();
-        
+
         usuarios = usuarioDao.listarUsuarios();
-        
+
+        req.setAttribute("status", req.getParameter("status"));
+        req.setAttribute("msg", req.getParameter("msg"));
         req.setAttribute("usuarios", usuarios);
-        
+
         return "/pages/usuario/gerenciar.jsp";
 
     }

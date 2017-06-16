@@ -160,21 +160,27 @@ public class Cadastrar implements Logica {
                 cteste.setCodigofonte(inputStream);
                 cteste.setCodigofonte_linguagem(codigofonte_linguagem);
 
+                req.setAttribute("q", q);
+                req.setAttribute("status", "1");
+                
                 if (casostesteId == 0) {
-                    System.out.println("Cadastrando: " + q);
+                    System.out.println("Cadastrando: " + cteste);
                     int lastId = ctDao.insereCasoteste(cteste);
                     //q.setId(lastId);
 
-                    req.setAttribute("q", q);
-                    req.setAttribute("status", "1");
                     req.setAttribute("msg", "Caso de teste cadastrado com sucesso");
-                    req.setAttribute("redirTo", "CasoTesteGerenciar");
-                    return "/redirect.jsp";
+                    
+                    
                 } else {
 
-                    System.out.println("Editando: " + q);
+                    System.out.println("Editando: " + cteste);
                     ctDao.alteraCasoteste(cteste);
+                    
+                    req.setAttribute("msg", "Caso de teste alterado com sucesso");
                 }
+                
+                req.setAttribute("redirTo", "CasoTesteGerenciar");
+                return "/redirect.jsp";
 
             }
         } else {
@@ -185,13 +191,14 @@ public class Cadastrar implements Logica {
                 try {
                     casostesteId = Integer.parseInt(req.getParameter("id"));
                     cteste = ctDao.obtemCasoteste(Integer.valueOf(req.getParameter("id")));
-                    
+
                     boolean sourceUpado;
-                    if(cteste.getCodigofonte() == null)
-                        sourceUpado =  false;
-                    else
+                    if (cteste.getCodigofonte() == null) {
+                        sourceUpado = false;
+                    } else {
                         sourceUpado = true;
-                    
+                    }
+
                     req.setAttribute("p", cteste);
                     req.setAttribute("sourceUpado", sourceUpado);
 
@@ -201,8 +208,6 @@ public class Cadastrar implements Logica {
                     req.setAttribute("redirTo", "CasoTesteGerenciar");
                     return "/redirect.jsp";
                 }
-
-                
 
             }
 

@@ -17,12 +17,12 @@ public class Cadastrar implements Logica {
     public String executa(HttpServletRequest req, HttpServletResponse res) throws Exception {
 
         System.out.println("Executando a logica " + this.getClass().getName() + " ...");
-        
+
         UsuarioDAO fDao = new UsuarioDAO();
 
         // So tenta processar informacoes se for um POST
         if (req.getMethod().equals("POST")) {
-            
+
             int usuarioId = Integer.parseInt(req.getParameter("id"));
 
             // seta a mensagem como cadastrado como sucesso     
@@ -51,17 +51,19 @@ public class Cadastrar implements Logica {
 
             String senha = req.getParameter("senha");
 
-            if (senha.length() < 3) {
-                req.setAttribute("status", "0");
-                req.setAttribute("errSenha", "1");
-                msgErro.add("O campo <b>Senha</b> deve ser preenchido");
+            if (usuarioId == 0) {
+                if (senha.length() < 3) {
+                    req.setAttribute("status", "0");
+                    req.setAttribute("errSenha", "1");
+                    msgErro.add("O campo <b>Senha</b> deve ser preenchido");
+                }
             }
 
             req.setAttribute("msgErro", msgErro);
             System.out.println("Erros encontrados: " + msgErro.size());
 
             if (req.getAttribute("status").equals("1")) {
-                
+
                 Usuario p = new Usuario();
 
                 p.setId(usuarioId);
@@ -73,18 +75,25 @@ public class Cadastrar implements Logica {
                 if (usuarioId == 0) {
                     System.out.println("Cadastrando: " + p);
                     fDao.insereUsuario(p);
+                    
+                    req.setAttribute("msg", "Cadastrado com sucesso");
 
                 } else {
 
                     System.out.println("Editando: " + p);
                     fDao.alteraUsuario(p);
+                    
+                    req.setAttribute("msg", "Alterado com sucesso");
                 }
+                
+                req.setAttribute("redirTo", "UsuarioGerenciar");
+                return "/redirect.jsp";
             }
         } else {
 
             String op = (String) req.getParameter("op");
             if ("editar".equals(op)) {
-                
+
                 req.setAttribute("p", fDao.obtemUsuario(Integer.valueOf(req.getParameter("pId"))));
 
             }

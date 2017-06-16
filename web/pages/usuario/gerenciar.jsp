@@ -1,5 +1,3 @@
-
-
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <c:set var="area" value="administrador"/>
@@ -22,6 +20,9 @@
 
 <div class="row">
     <div class="col-lg-10">
+        
+        <c:if test="${status=='0'}"><div class="alert alert-danger">${msg}</div></c:if>
+        <c:if test="${status=='1'}"><div class="alert alert-success">${msg}</div></c:if>
 
         <div id="BoxDesativa" class="alert alert-info" style="display: none">Usuário DESATIVADO com sucesso</div>
         <div id="BoxAtiva" class="alert alert-info" style="display: none">Usuário ATIVADO com sucesso</div> 

@@ -7,9 +7,12 @@
     <jsp:setProperty name="p" property="*"/>
 </jsp:useBean>
 
+<c:if test="${p.id=='0'}"><c:set var = "acao" value = "Cadastrar"/></c:if>
+<c:if test="${p.id!='0'}"><c:set var = "acao" value = "Alterar"/></c:if>
+
 <div class="row">
     <div class="col-lg-12">
-        <h1 class="page-header">Usuário - Cadastrar</h1>
+        <h1 class="page-header">Usuário - ${acao}</h1>
     </div>
     <!-- /.col-lg-12 -->
 </div>
@@ -129,7 +132,7 @@
                                             },
                                             email: {
                                                 required: true
-                                            },
+                                            }<c:if test="${p.id=='0'}">,
                                             senha: {
                                                 required: true,
                                                 minlength: 3
@@ -137,6 +140,7 @@
                                             confsenha: {
                                                 equalTo: "#senha"
                                             }
+                                            </c:if>
                                         }
 
                                     });</script>

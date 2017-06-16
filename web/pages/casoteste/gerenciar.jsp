@@ -28,25 +28,8 @@
             <label>Enunciado:</label> "${q.enunciado}"
         </div>
 
-        <c:if test="${status=='0'}">
-            <div class="panel panel-red">
-                <div class="panel-heading">
-                    Erros encontrados
-                </div>
-                <div class="panel-body">
-                    <c:forEach var="erro" items="${msgErro}">
-                        <div class="alert alert-danger">${erro}</div>
-                    </c:forEach>
-                </div>
-
-            </div>
-        </c:if>
-
-        <c:if test="${status=='1'}">
-            <div class="alert alert-success">
-                ${msg}
-            </div>
-        </c:if>
+        <c:if test="${status=='0'}"><div class="alert alert-danger">${msg}</div></c:if>
+        <c:if test="${status=='1'}"><div class="alert alert-success">${msg}</div></c:if>
 
         <div id="BoxSucesso" class="alert alert-success" style="display: none">
             Questão removida com sucesso
