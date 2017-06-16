@@ -21,7 +21,7 @@
 
 
 <div class="row">
-    <div class="col-lg-10">
+    <div class="col-lg-8">
 
         <div class="form-group">
             <label>Questão:</label> "${q.titulo}"<br>
@@ -30,15 +30,17 @@
 
         <c:if test="${status=='0'}"><div class="alert alert-danger">${msg}</div></c:if>
         <c:if test="${status=='1'}"><div class="alert alert-success">${msg}</div></c:if>
+        <c:if test="${status=='3'}"><div class="alert alert-info">Agora, gerencie os casos de teste para sua questão</div></c:if>
 
         <div id="BoxSucesso" class="alert alert-success" style="display: none">
-            Questão removida com sucesso
+            Caso de teste removido com sucesso
         </div>
         <div id="BoxErro" class="alert alert-danger" style="display: none">
-            Questão não pôde ser removida
+            Caso de teste não pôde ser removido
         </div>
 
-        <a href="Controle?logica=Casoteste.Cadastrar&qId=${q.id}"><i class="icon-plus-sign">Criar novo caso de teste </i></a>
+            <a href="Controle?logica=Casoteste.Cadastrar&qId=${q.id}"><i class="icon-plus-sign">Criar novo caso de teste </i></a><br>
+        
         <div class="dataTable_wrapper">
             <table class="table table-striped table-bordered table-hover" id="tableCasosteste">
                 <thead>

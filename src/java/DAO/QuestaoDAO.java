@@ -9,7 +9,7 @@ import java.util.List;
 public class QuestaoDAO {
 
     private Connection con = null;
-    private PreparedStatement stmtListar, stmtAtualizar, stmtObtemQuestao, stmtInserir, stmtLastId,stmtRemover;
+    private PreparedStatement stmtListar, stmtAtualizar, stmtObtemQuestao, stmtInserir, stmtLastId,stmtRemover,stmtListarProfessor;
 
     public QuestaoDAO() throws SQLException, ClassNotFoundException {
         con = ConnectionFactory.getConnection();
@@ -18,6 +18,10 @@ public class QuestaoDAO {
 
         stmtListar = con.prepareStatement(
                 "SELECT * FROM questao"
+        );
+        
+        stmtListarProfessor = con.prepareStatement(
+                "SELECT * FROM questao WHERE professor=?"
         );
         stmtAtualizar = con.prepareStatement(
                 "UPDATE questao SET "
@@ -49,6 +53,28 @@ public class QuestaoDAO {
         List<Questao> listaQuestoes = new ArrayList<>();
 
         ResultSet rs1 = stmtListar.executeQuery();
+
+        while (rs1.next()) {
+            Questao q = new Questao();
+            q.setId(rs1.getInt("id"));
+            q.setTitulo(rs1.getString("titulo"));
+            q.setEnunciado(rs1.getString("enunciado"));
+            q.setProfessor(rs1.getInt("professor"));
+
+            listaQuestoes.add(q);
+
+        }
+
+        return listaQuestoes;
+
+    }
+    
+    public List<Questao> listarQuestoes(int professor) throws SQLException {
+
+        List<Questao> listaQuestoes = new ArrayList<>();
+        
+        stmtListarProfessor.setInt(1, professor);
+        ResultSet rs1 = stmtListarProfessor.executeQuery();
 
         while (rs1.next()) {
             Questao q = new Questao();

@@ -6,11 +6,13 @@ import DAO.QuestaoDAO;
 import beans.Casoteste;
 
 import beans.Questao;
+import beans.Usuario;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 public class Gerenciar implements Logica {
 
@@ -24,21 +26,31 @@ public class Gerenciar implements Logica {
             if (questaoId < 1) {
                 throw new NumberFormatException();
             }
-            
+
             Questao q = new Questao();
             QuestaoDAO qDao = new QuestaoDAO();
             q = qDao.obtemQuestao(questaoId);
+            req.setAttribute("q", q);
+
+            HttpSession session = req.getSession(true);
+            Usuario u = (Usuario) session.getAttribute("usuario");
+
+            // impede chamar questões que não são do professor logado por GET
+            if ("Professor".equals(u.getPerfil()) && u.getId() != q.getProfessor()) {
+                req.setAttribute("status", 2);
+                req.setAttribute("redirTo", "QuestaoGerenciar");
+                return "/redirect.jsp";
+            }
 
             List<Casoteste> casosteste = new ArrayList<>();
             CasotesteDAO ctDao = new CasotesteDAO();
-            
+
             casosteste = ctDao.listarCasosteste(questaoId);
-            
-            req.setAttribute("q", q);
+
             req.setAttribute("casosteste", casosteste);
             req.setAttribute("status", req.getParameter("status"));
             req.setAttribute("msg", req.getParameter("msg"));
-            
+
             return "/pages/casoteste/gerenciar.jsp";
 
         } catch (NumberFormatException e) {

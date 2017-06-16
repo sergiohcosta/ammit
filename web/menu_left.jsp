@@ -13,7 +13,7 @@
             <a href="Controle?logica=Inicio"><i class="fa fa-dashboard fa-fw"></i>Início</a>
         </li>
 
-
+        <c:if test="${sessionScope.usuario.perfil == 'Admin'}">
         <li class="MenuGerente">
             <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i>Usuários<span class="fa arrow"></span></a>
             <ul class="nav nav-second-level">
@@ -26,6 +26,7 @@
             </ul>
             <!-- /.nav-second-level -->
         </li>
+        </c:if>
 
         <li class="MenuGerente">
             <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i>Questões<span class="fa arrow"></span></a>
@@ -40,6 +41,7 @@
             <!-- /.nav-second-level -->
         </li>
         
+        <c:if test="${sessionScope.usuario.perfil == 'Aluno'}">
         <li class="MenuGerente">
             <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i>Questões para Responder<span class="fa arrow"></span></a>
             <ul class="nav nav-second-level">
@@ -49,10 +51,7 @@
             </ul>
             <!-- /.nav-second-level -->
         </li>
-
-        <li>
-            <a href="Controle?logica=Acesso.Logout"><i class="fa fa-child fa-fw"></i>Logout</a>
-        </li>
+        </c:if>
 
     </ul>
 </div>

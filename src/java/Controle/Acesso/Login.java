@@ -7,10 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-/**
- *
- * @author sergio
- */
 public class Login implements Logica {
 
     @Override
@@ -59,7 +55,7 @@ public class Login implements Logica {
             }
 
         } else {
-            System.out.println(req.getParameter("msg"));
+            req.setAttribute("errLogin", req.getParameter("errLogin"));
         }
 
         return jspRetorno;

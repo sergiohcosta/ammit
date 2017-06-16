@@ -37,7 +37,7 @@
     <input type="hidden" name="logica" value="Casoteste.Cadastrar">
     <input type="hidden" name="id" value="<jsp:getProperty name="p" property="id" />">
     <input type="hidden" name="qId" value="${q.id}">
-    
+
     <div class="row">
         <div class="col-lg-12">
 
@@ -46,16 +46,16 @@
                 <label>Enunciado:</label> "${q.enunciado}"
             </div>
 
-            <div id="BoxTítulo" class="form-group">
-                <label>Título</label>
+            <div id="BoxTitulo" class="form-group">
+                <label id="LabelTitulo">Título</label>
                 <input class="form-control" name="titulo" placeholder="titulo" id="titulo" value="<jsp:getProperty name="p" property="titulo" />">
                 <p class="help-block">Digite o titulo do caso de teste</p>
             </div>
 
             <div id="BoxConteudo" class="form-group">
-                <label>Conteúdo</label>
+                <label id="LabelConteudo">Conteúdo</label>
                 <textarea name="conteudo" placeholder="conteudo" id="conteudo" class="form-control"><jsp:getProperty name="p" property="conteudo" /></textarea>
-                <p class="help-block">Digite o enunciado da questão</p>
+                <p class="help-block">Digite o conteúdo do caso de teste</p>
             </div>
 
         </div>
@@ -74,15 +74,21 @@
                     </div>
                     <div id="BoxEntradasAmmit" class="row">
                         <div class="col-lg-6">
-                            <label>Sintaxe Ammit</label>
-                            <input class="form-control" name="ammit_seed" placeholder="Sintaxe Ammit" id="ammit_seed" value='<jsp:getProperty name="p" property="ammit_seed" />'>
-                            <label>Quantidade de linhas:</label>
-                            <select id="ammit_qtde" name="ammit_qtde">
-                                <c:forEach begin="1" end="100" varStatus="loop">
-                                    <option value="<c:out value="${loop.current}"/>"><c:out value="${loop.current}"/></option>
-                                </c:forEach>
-                            </select>
-                            <input type='button' id="gerar" value='Gerar'>
+                            <div id="BoxAmmit_seed" class="form-group">
+                                <label id="LabelAmmit_seed">Sintaxe Ammit</label>
+                                <input class="form-control" name="ammit_seed" placeholder="Sintaxe Ammit" id="ammit_seed" value='<jsp:getProperty name="p" property="ammit_seed" />'>
+                            </div>
+                            <div id="BoxAmmit_qtde" class="form-group">
+                                <label>Quantidade de linhas:</label>
+                                <select id="ammit_qtde" name="ammit_qtde">
+                                    <c:forEach begin="1" end="100" varStatus="loop">
+                                        <option value="<c:out value="${loop.current}"/>"><c:out value="${loop.current}"/></option>
+                                    </c:forEach>
+                                </select>
+                                <input type='button' id="gerar" value='Gerar'>
+
+                            </div>
+                            
                         </div>
                         <div class="col-lg-6">
                             <div class="panel panel-default">
@@ -105,7 +111,10 @@
                     </div>
                     <div id="BoxEntradasManual" class="row">
                         <div class="col-lg-6">
-                            <textarea style="width:100%; height: 200px;" name="entrada" placeholder="entrada" id="entrada" class="form-control"><jsp:getProperty name="p" property="entrada" /></textarea>
+                            <div id="BoxEntrada" class="form-group">
+                                <label id="LabelEntrada">Entrada</label>
+                                <textarea style="width:100%; height: 200px;" name="entrada" placeholder="entrada" id="entrada" class="form-control"><jsp:getProperty name="p" property="entrada" /></textarea>
+                            </div>
                         </div>
 
                     </div>
@@ -123,25 +132,31 @@
                 <div class="panel-body">
                     <div class="form-group" id="tipo_saidas_seletor_codigo">
                         <c:if test="${sourceUpado}"><div class="alert alert-warning">Você já tem um código fonte armazenado para esse caso de teste<br>Se você selecionar um novo arquivo, o antigo será perdido</div></c:if>
-                        <input type="radio" name="tipo_saidas" class="tipo_saidas" id="tipo_saidas_codigo" value="saidacodigo">
-                        <label>Utilize seu próprio código fonte para validar as entradas</label>
-                    </div>
-                    <div id="BoxSaidasCodigo" class="row">
-                        <div class="col-lg-6">
-                            <input type="file" class="form-control" name="codigofonte" placeholder="codigofonte" id="codigofonte">
-                            <label>Linguagem do código fonte:</label>
-                            <select id="codigofonte_linguagem" name="codigofonte_linguagem">
-                                <option value="C">C</option>
-                            </select>
+                            <input type="radio" name="tipo_saidas" class="tipo_saidas" id="tipo_saidas_codigo" value="saidacodigo">
+                            <label>Utilize seu próprio código fonte para validar as entradas</label>
                         </div>
-                    </div>
-                    <div class="form-group" id="tipo_saidas_seletor_manual">
-                        <input type="radio" name="tipo_saidas" class="tipo_saidas" id="tipo_saidas_manual" value="saidamanual">
-                        <label>Insira manualmente suas saídas</label>
-                    </div>
-                    <div id="BoxSaidasManual" class="row">
-                        <div class="col-lg-6">
-                            <textarea style="width:100%; height: 200px;" name="saida" placeholder="saida" id="saida" class="form-control"><jsp:getProperty name="p" property="saida" /></textarea>
+                        <div id="BoxSaidasCodigo" class="row">
+                            <div class="col-lg-6">
+                                <div id="BoxCodigofonte" class="form-group">
+                                    <label id="LabelCodigofonte">Forneca um arquivo com o código fonte</label>
+                                    <input type="file" class="form-control" name="codigofonte" placeholder="codigofonte" id="codigofonte">
+                                </div>
+                                <label>Linguagem do código fonte:</label>
+                                <select id="codigofonte_linguagem" name="codigofonte_linguagem">
+                                    <option value="C">C</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group" id="tipo_saidas_seletor_manual">
+                            <input type="radio" name="tipo_saidas" class="tipo_saidas" id="tipo_saidas_manual" value="saidamanual">
+                            <label>Insira manualmente suas saídas</label>
+                        </div>
+                        <div id="BoxSaidasManual" class="row">
+                            <div class="col-lg-6">
+                                <div id="BoxSaida" class="form-group">
+                                    <label id="LabelSaida">Saída</label>
+                                    <textarea style="width:100%; height: 200px;" name="saida" placeholder="saida" id="saida" class="form-control"><jsp:getProperty name="p" property="saida" /></textarea>
+                            </div>
                         </div>
 
                     </div>
@@ -156,6 +171,41 @@
     <br><br>
 </form>
 <script>
+
+    <c:if test="${errTitulo =='1'}">
+    $("#BoxTitulo").toggleClass("has-error");
+    $("#LabelTitulo").toggleClass("text-danger");
+    </c:if>
+
+    <c:if test="${errConteudo =='1'}">
+    $("#BoxConteudo").toggleClass("has-error");
+    $("#LabelConteudo").toggleClass("text-danger");
+    </c:if>
+
+    <c:if test="${errAmmit_seed =='1'}">
+    $("#BoxAmmit_seed").toggleClass("has-error");
+    $("#LabelAmmit_seed").toggleClass("text-danger");
+    </c:if>
+    <c:if test="${errAmmit_qtde =='1'}">
+    $("#BoxAmmit_qtde").toggleClass("has-error");
+    $("#LabelAmmit_qtde").toggleClass("text-danger");
+    </c:if>
+    <c:if test="${errEntrada =='1'}">
+    $("#BoxEntrada").toggleClass("has-error");
+    $("#LabelEntrada").toggleClass("text-danger");
+    </c:if>
+    <c:if test="${errCodigofonte =='1'}">
+    $("#BoxCodigofonte").toggleClass("has-error");
+    $("#LabelCodigofonte").toggleClass("text-danger");
+    </c:if>
+    <c:if test="${errCodigofonte_linguagem =='1'}">
+    $("#BoxCodigofonte_linguagem").toggleClass("has-error");
+    $("#LabelCodigofonte_linguagem").toggleClass("text-danger");
+    </c:if>
+    <c:if test="${errSaida =='1'}">
+    $("#BoxSaida").toggleClass("has-error");
+    $("#LabelSaida").toggleClass("text-danger");
+    </c:if>
 
     $("#tipo_entradas_ammit").attr("checked", true);
     desativarEntradaManual();

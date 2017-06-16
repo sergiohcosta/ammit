@@ -21,20 +21,26 @@
 
 
 <div class="row">
-    <div class="col-lg-10">
+    <div class="col-lg-8">
 
         <c:if test="${status=='0'}">
             <div class="alert alert-danger">
                 ${msg}
             </div>
         </c:if>
-        
+
         <c:if test="${status=='1'}">
             <div class="alert alert-success">
                 ${msg}
             </div>
         </c:if>
-
+        
+        <c:if test="${status=='2'}">
+            <div class="alert alert-danger">
+                Selecione uma questão válida
+            </div>
+        </c:if>
+        
         <div id="BoxSucesso" class="alert alert-success" style="display: none">
             Questão removida com sucesso
         </div>
@@ -42,12 +48,16 @@
             Questão não pôde ser removida
         </div>
 
+        <a href="Controle?logica=Questao.Cadastrar"><i class="icon-plus-sign">Criar nova questão</i></a><br>
+        
         <div class="dataTable_wrapper">
             <table class="table table-striped table-bordered table-hover" id="tableQuestoes">
                 <thead>
                     <tr>
                         <th>Título</th>
+                        <c:if test="${sessionScope.usuario.perfil == 'Admin'}">
                         <th>Professor</th>
+                        </c:if>
                         <th>Opções</th>
                     </tr>
                 </thead>
@@ -57,7 +67,9 @@
                     <c:forEach var="questao" items="${questoes}">
                         <tr class="odd gradeA">
                             <td>${questao.titulo}</td>
-                            <td>${questao.professor}</td>
+                            <c:if test="${sessionScope.usuario.perfil == 'Admin'}">
+                                <td>${questao.professor}</td>
+                            </c:if>
                             <td class="CelOpcoes" align="center">
                                 <a href="Controle?logica=Questao.Cadastrar&op=editar&pId=${questao.id}">
                                     <span title="Editar Questão" class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
@@ -107,7 +119,7 @@
                 "url": "//cdn.datatables.net/plug-ins/1.10.10/i18n/Portuguese-Brasil.json"
             },
             responsive: true,
-            columnDefs: [{orderable: false, targets: [2]}]
+            columnDefs: [{orderable: false, targets: [<c:if test="${sessionScope.usuario.perfil == 'Admin'}">2</c:if><c:if test="${sessionScope.usuario.perfil != 'Admin'}">1</c:if>]}]
         });
 
         $('#tableQuestoes tbody').on('click', 'span.icon-delete', function () {

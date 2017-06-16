@@ -1,15 +1,18 @@
 package Controle.Questao;
 
-import Controle.Usuario.*;
 import Controle.Logica;
+
 import DAO.QuestaoDAO;
-import DAO.UsuarioDAO;
+
 import beans.Questao;
 import beans.Usuario;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 public class Gerenciar implements Logica {
 
@@ -31,8 +34,19 @@ public class Gerenciar implements Logica {
         }
 
         
-
-        questoes = qDao.listarQuestoes();
+        HttpSession session = req.getSession(true);
+        Usuario u = (Usuario) session.getAttribute("usuario");
+        
+        if(u==null){
+            return "/auth.jsp";
+        }
+        
+        if("Professor".equals(u.getPerfil())){
+            questoes = qDao.listarQuestoes(u.getId());
+        } else {
+            questoes = qDao.listarQuestoes();
+        }
+        
 
         req.setAttribute("questoes", questoes);
         req.setAttribute("status", req.getParameter("status"));

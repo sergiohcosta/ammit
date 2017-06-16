@@ -95,19 +95,21 @@ public class Cadastrar implements Logica {
             String entrada = req.getParameter("entrada");
 
             if ("entradaammit".equals(tipo_entradas)) {
+                entrada = "";
                 if (ammit_seed.length() < 1) {
                     req.setAttribute("status", "0");
-                    req.setAttribute("errAmmitSeed", "1");
-                    msgErro.add("O campo <b>Sintaxe Ammit</b> deve conter pelo menos 3 caracteres");
+                    req.setAttribute("errAmmit_seed", "1");
+                    msgErro.add("O campo <b>Sintaxe Ammit</b> deve conter pelo menos 1 caracter");
                 }
 
                 if (ammit_qtde < 0) {
                     req.setAttribute("status", "0");
-                    req.setAttribute("errAmmitQtde", "1");
+                    req.setAttribute("errAmmit_qtde", "1");
                     msgErro.add("A quantidade de linhas gerada pelo Ammit deve ser pelo menos 1");
                 }
             } else {
-
+                ammit_seed = "";
+                ammit_qtde = 0;
                 if (entrada.length() < 1) {
                     req.setAttribute("status", "0");
                     req.setAttribute("errEntrada", "1");
@@ -126,17 +128,24 @@ public class Cadastrar implements Logica {
                 Part filePart = req.getPart("codigofonte");
                 if (filePart != null) {
 
-                    System.out.println(filePart.getName());
-                    System.out.println(filePart.getSize());
-                    System.out.println(filePart.getContentType());
-
-                    inputStream = filePart.getInputStream();
+                    System.out.println("getName=" + filePart.getName());
+                    System.out.println("getSize=" + filePart.getSize());
+                    System.out.println("getContentType=" + filePart.getContentType());
+                    if ("text/plain".equals(filePart.getContentType())) {
+                        inputStream = filePart.getInputStream();
+                        saida = "";
+                    } else {
+                        inputStream = null;
+                        req.setAttribute("status", "0");
+                        req.setAttribute("errCodigofonte", "1");
+                        msgErro.add("O <b>Código fonte</b> deve ser um arquivo de texto plano");
+                    }
                 }
 
             } else {
                 if (saida.length() < 1) {
                     req.setAttribute("status", "0");
-                    req.setAttribute("errEntrada", "1");
+                    req.setAttribute("errSaida", "1");
                     msgErro.add("O campo <b>Saída</b> deve conter pelo menos 1 caracter");
                 }
 
@@ -162,23 +171,22 @@ public class Cadastrar implements Logica {
 
                 req.setAttribute("q", q);
                 req.setAttribute("status", "1");
-                
+
                 if (casostesteId == 0) {
                     System.out.println("Cadastrando: " + cteste);
                     int lastId = ctDao.insereCasoteste(cteste);
                     //q.setId(lastId);
 
                     req.setAttribute("msg", "Caso de teste cadastrado com sucesso");
-                    
-                    
+
                 } else {
 
                     System.out.println("Editando: " + cteste);
                     ctDao.alteraCasoteste(cteste);
-                    
+
                     req.setAttribute("msg", "Caso de teste alterado com sucesso");
                 }
-                
+
                 req.setAttribute("redirTo", "CasoTesteGerenciar");
                 return "/redirect.jsp";
 

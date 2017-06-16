@@ -64,6 +64,9 @@
                             <c:if test="${errLogin==1}">
                                 <div class="alert alert-warning" role="alert">Usuário ou senha incorretos.</div>
                             </c:if>
+                            <c:if test="${errLogin==2}">
+                                <div class="alert alert-info">Por favor efetue login.</div>
+                            </c:if>
                             <c:if test="${errLogin==3}">
                                 <div class="alert alert-warning" role="alert">Usuário desativado.</div>
                             </c:if>
@@ -87,7 +90,7 @@
 
                                 </fieldset>
                             </form>
-                        
+
                             <center><a href="Controle?logica=Acesso.CriarUsuario">Criar conta</a></center>
                         </div>
                     </div>
