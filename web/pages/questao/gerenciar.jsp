@@ -62,13 +62,13 @@
                             <td>${questao.professor}</td>
                             <td class="CelOpcoes" align="center">
                                 <a href="Controle?logica=Questao.Cadastrar&op=editar&pId=${questao.id}">
-                                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                                    <span title="Editar Questão" class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                                 </a>
                                 <a href="Controle?logica=Casoteste.Gerenciar&op=editar&qId=${questao.id}">
-                                    <span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span>
+                                    <span title="Gerenciar Casos de Teste" class="glyphicon glyphicon-briefcase" aria-hidden="true"></span>
                                 </a>
                                 <a href="#">
-                                    <span class="glyphicon glyphicon-remove icon-delete" id="${questao.id}" aria-hidden="true"></span>
+                                    <span title="Excluir Questão" class="glyphicon glyphicon-remove icon-delete" id="${questao.id}" aria-hidden="true"></span>
                                 </a>
                             </td>
                         </tr>
