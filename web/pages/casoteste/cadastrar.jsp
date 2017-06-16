@@ -1,3 +1,4 @@
+<%-- PAGES/CASOTESTE/CADASTRAR.JSP --%>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
@@ -15,7 +16,7 @@
 </div>
 
 <c:if test="${status=='1'}">
-    <div id="sucesso" class="alert alert-success">Questão cadastrada.</div>
+    <div id="sucesso" class="alert alert-success">Caso de Teste cadastrada.</div>
 </c:if>
 
 
@@ -32,119 +33,128 @@
 
     </div>
 </c:if>
+<form method="post" action="Controle" enctype="multipart/form-data" name='form-casoteste' id='casoteste'>
+    <input type="hidden" name="logica" value="Casoteste.Cadastrar">
+    <input type="hidden" name="id" value="<jsp:getProperty name="p" property="id" />">
+    <input type="hidden" name="qId" value="${q.id}">
+    
+    <div class="row">
+        <div class="col-lg-12">
 
-<div class="row">
-    <div class="col-lg-12">
-
-        <div class="form-group">
-            <label>Questão:</label> "${q.titulo}"<br>
-            <label>Enunciado:</label> "${q.enunciado}"
-        </div>
-
-        <div id="BoxTítulo" class="form-group">
-            <label>Título</label>
-            <input class="form-control" name="titulo" placeholder="titulo" id="titulo" value="<jsp:getProperty name="p" property="titulo" />">
-            <p class="help-block">Digite o titulo do caso de teste</p>
-        </div>
-
-        <div id="BoxConteudo" class="form-group">
-            <label>Conteúdo</label>
-            <textarea name="conteudo" placeholder="conteudo" id="conteudo" class="form-control"><jsp:getProperty name="p" property="conteudo" /></textarea>
-            <p class="help-block">Digite o enunciado da questão</p>
-        </div>
-
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-lg-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                Entradas
+            <div class="form-group">
+                <label>Questão:</label> "${q.titulo}"<br>
+                <label>Enunciado:</label> "${q.enunciado}"
             </div>
-            <div class="panel-body">
-                <div class="form-group">
-                    <input type="radio" name="tipo_entradas" class="tipo_entradas" id="tipo_entradas_ammit">
-                    <label>Utilize o Ammit para gerar entradas</label>
+
+            <div id="BoxTítulo" class="form-group">
+                <label>Título</label>
+                <input class="form-control" name="titulo" placeholder="titulo" id="titulo" value="<jsp:getProperty name="p" property="titulo" />">
+                <p class="help-block">Digite o titulo do caso de teste</p>
+            </div>
+
+            <div id="BoxConteudo" class="form-group">
+                <label>Conteúdo</label>
+                <textarea name="conteudo" placeholder="conteudo" id="conteudo" class="form-control"><jsp:getProperty name="p" property="conteudo" /></textarea>
+                <p class="help-block">Digite o enunciado da questão</p>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Entradas
                 </div>
-                <div id="BoxEntradasAmmit" class="row">
-                    <div class="col-lg-6">
-                        <label>Sintaxe Ammit</label>
-                        <input class="form-control" name="ammit_seed" placeholder="Sintaxe Ammit" id="ammit_seed">
-                        <label>Quantidade de linhas:</label>
-                        <select id="ammit_qtde" name="ammit_qtde">
-                            <c:forEach begin="1" end="100" varStatus="loop">
-                                <option value="<c:out value="${loop.current}"/>"><c:out value="${loop.current}"/></option>
-                            </c:forEach>
-                        </select>
-                        <button id="gerar">Gerar</button>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <input type="radio" name="tipo_entradas" class="tipo_entradas" id="tipo_entradas_ammit" value="entradaammit">
+                        <label>Utilize o Ammit para gerar entradas</label>
                     </div>
-                    <div class="col-lg-6">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                Exemplos de Entradas Geradas pelo Ammit
+                    <div id="BoxEntradasAmmit" class="row">
+                        <div class="col-lg-6">
+                            <label>Sintaxe Ammit</label>
+                            <input class="form-control" name="ammit_seed" placeholder="Sintaxe Ammit" id="ammit_seed" value='<jsp:getProperty name="p" property="ammit_seed" />'>
+                            <label>Quantidade de linhas:</label>
+                            <select id="ammit_qtde" name="ammit_qtde">
+                                <c:forEach begin="1" end="100" varStatus="loop">
+                                    <option value="<c:out value="${loop.current}"/>"><c:out value="${loop.current}"/></option>
+                                </c:forEach>
+                            </select>
+                            <input type='button' id="gerar" value='Gerar'>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    Exemplos de Entradas Geradas pelo Ammit
+                                </div>
+                                <div class="panel-body" id="AmmitGeracao">
+                                    <div class="alert alert-warning" id="ErroAmmit" style="display: none;">
+                                        O Ammit não conseguiu interpretar sua sintaxe.<br>
+                                        Por favor, tente novamente
+                                    </div>
+                                </div>
                             </div>
-                            <div class="panel-body" id="AmmitGeracao">
-                            </div>
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="radio" name="tipo_entradas" id="tipo_entradas_manual" class="tipo_entradas" value="entradamanual">
+                        <label>Digitar entradas manualmente</label>
+                    </div>
+                    <div id="BoxEntradasManual" class="row">
+                        <div class="col-lg-6">
+                            <textarea style="width:100%; height: 200px;" name="entrada" placeholder="entrada" id="entrada" class="form-control"><jsp:getProperty name="p" property="entrada" /></textarea>
                         </div>
 
                     </div>
                 </div>
-                <div class="form-group">
-                    <input type="radio" name="tipo_entradas" id="tipo_entradas_manual" class="tipo_entradas">
-                    <label>Digitar entradas manualmente</label>
-                </div>
-                <div id="BoxEntradasManual" class="row">
-                    <div class="col-lg-6">
-                        <textarea style="width:100%; height: 200px;" name="entrada" placeholder="entrada" id="entrada" class="form-control"></textarea>
-                    </div>
+            </div>
+        </div>
+    </div>
 
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Saídas
+                </div>
+                <div class="panel-body">
+                    <div class="form-group" id="tipo_saidas_seletor_codigo">
+                        <c:if test="${sourceUpado}"><div class="alert alert-warning">Você já tem um código fonte armazenado para esse caso de teste<br>Se você selecionar um novo arquivo, o antigo será perdido</div></c:if>
+                        <input type="radio" name="tipo_saidas" class="tipo_saidas" id="tipo_saidas_codigo" value="saidacodigo">
+                        <label>Utilize seu próprio código fonte para validar as entradas</label>
+                    </div>
+                    <div id="BoxSaidasCodigo" class="row">
+                        <div class="col-lg-6">
+                            <input type="file" class="form-control" name="codigofonte" placeholder="codigofonte" id="codigofonte">
+                            <label>Linguagem do código fonte:</label>
+                            <select id="codigofonte_linguagem" name="codigofonte_linguagem">
+                                <option value="C">C</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group" id="tipo_saidas_seletor_manual">
+                        <input type="radio" name="tipo_saidas" class="tipo_saidas" id="tipo_saidas_manual" value="saidamanual">
+                        <label>Insira manualmente suas saídas</label>
+                    </div>
+                    <div id="BoxSaidasManual" class="row">
+                        <div class="col-lg-6">
+                            <textarea style="width:100%; height: 200px;" name="saida" placeholder="saida" id="saida" class="form-control"><jsp:getProperty name="p" property="saida" /></textarea>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="row">
-    <div class="col-lg-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                Saídas
-            </div>
-            <div class="panel-body">
-                <div class="form-group">
-                    <input type="radio" name="tipo_saidas" class="tipo_saidas" id="tipo_saidas_codigo">
-                    <label>Utilize seu próprio código fonte para validar as entradas</label>
-                </div>
-                <div id="BoxSaidasCodigo" class="row">
-                    <div class="col-lg-6">
-                        <input type="file" class="form-control" name="codigofonte" placeholder="codigofonte" id="codigofonte">
-                        <label>Linguagem do código fonte:</label>
-                        <select id="codigofonte_linguagem" name="codigofonte_linguagem">
-                            <option value="C">C</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <input type="radio" name="tipo_saidas" class="tipo_saidas" id="tipo_saidas_codigo">
-                    <label>Insira manualmente suas saídas</label>
-                </div>
-                <div id="BoxSaidasManual" class="row">
-                    <div class="col-lg-6">
-                        <textarea style="width:100%; height: 200px;" name="saida" placeholder="saida" id="saida" class="form-control"></textarea>
-                    </div>
+    <button type="submit" class="btn btn-default">Salvar</button>
+    <button type="reset" class="btn btn-default">Limpar</button>
 
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<button type="submit" class="btn btn-default">Salvar</button>
-<button type="reset" class="btn btn-default">Limpar</button>
-
-<br><br>
-
+    <br><br>
+</form>
 <script>
 
     $("#tipo_entradas_ammit").attr("checked", true);
@@ -154,6 +164,7 @@
     desativarSaidaManual();
 
     $("#gerar").click(function () {
+        $("#ErroAmmit").hide();
         $.get("Controle?logica=Casoteste.Ammit", {seed: $("#ammit_seed").val(), qtde: $("#ammit_qtde").val()}, function () {})
                 .done(function (data) {
                     if ($("#entrada").val().length == 0)
@@ -162,13 +173,14 @@
                     $("#AmmitGeracao").html(data.replace(/\n/g, "<br>"));
                 })
                 .fail(function () {
-                    alert("Ocorreu um erro ao tentar gerar entradas");
+                    $("#ErroAmmit").show();
                 });
     });
 
     $(".tipo_entradas").click(function () {
         if ($("#tipo_entradas_ammit").is(':checked')) {
             desativarEntradaManual();
+            $("#tipo_saidas_seletor_manual").hide();
         } else {
             desativarEntradaAmmit();
         }
@@ -186,6 +198,7 @@
 
         $("#BoxEntradasAmmit").hide();
         $("#BoxEntradasManual").show();
+        $("#tipo_saidas_seletor_manual").show();
     }
     function desativarEntradaManual() {
 
@@ -202,6 +215,7 @@
 
         $("#BoxSaidasCodigo").show();
         $("#BoxSaidasManual").hide();
+        $("#tipo_saidas_seletor_manual").hide();
     }
 
 </script>

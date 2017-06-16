@@ -1,30 +1,32 @@
-package Controle.Casoteste;
-
-import Controle.Usuario.*;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Controle.Acesso;
 import Controle.Logica;
 import DAO.UsuarioDAO;
 import beans.Usuario;
 import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import javax.servlet.http.HttpSession;
 /**
  *
- * @author sergio
+ * @author Renam
  */
-public class Cadastrar_old implements Logica {
-
-    @Override
+public class CriarUsuario implements Logica {
     public String executa(HttpServletRequest req, HttpServletResponse res) throws Exception {
 
-        System.out.println("Executando a logica " + this.getClass().getName() + " ...");
+        System.out.println("Executando a logica  " + this.getClass().getName() + " ...");
+        
+        String jspRetorno = "/pages/acesso/criarusuario.jsp";
         
         UsuarioDAO fDao = new UsuarioDAO();
-
-        // So tenta processar informacoes se for um POST
+        
         if (req.getMethod().equals("POST")) {
-            
-            int usuarioId = Integer.parseInt(req.getParameter("id"));
+
+            int usuarioId = 0;//Integer.parseInt(req.getParameter("id"));
 
             // seta a mensagem como cadastrado como sucesso     
             req.setAttribute("status", "1");
@@ -80,20 +82,13 @@ public class Cadastrar_old implements Logica {
                     System.out.println("Editando: " + p);
                     fDao.alteraUsuario(p);
                 }
+                req.getRequestDispatcher("Controle?logica=Acesso.Login").forward(req, res);
             }
         } else {
-
-            String op = (String) req.getParameter("op");
-            if ("editar".equals(op)) {
-                
-                req.setAttribute("p", fDao.obtemUsuario(Integer.valueOf(req.getParameter("pId"))));
-
-            }
-
+            System.out.println(req.getParameter("msg"));
         }
 
-        return "/pages/casoteste/cadastrar.jsp";
-
+        return jspRetorno;
     }
-
+    
 }

@@ -1,6 +1,8 @@
+<%-- PAGES/QUESTAO/CADASTRAR.JSP --%>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@include file="/auth.jsp" %>
+
 <%@include file="/header.jsp" %>
 
 <jsp:useBean id="p" class="beans.Questao" scope="request">

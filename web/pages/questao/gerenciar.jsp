@@ -1,4 +1,4 @@
-
+<%-- PAGES/QUESTAO/GERENCIAR.JSP --%>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
@@ -24,16 +24,14 @@
     <div class="col-lg-10">
 
         <c:if test="${status=='0'}">
-            <div class="panel panel-red">
-                <div class="panel-heading">
-                    Erros encontrados
-                </div>
-                <div class="panel-body">
-                    <c:forEach var="erro" items="${msgErro}">
-                        <div class="alert alert-danger">${erro}</div>
-                    </c:forEach>
-                </div>
-
+            <div class="alert alert-danger">
+                ${msg}
+            </div>
+        </c:if>
+        
+        <c:if test="${status=='1'}">
+            <div class="alert alert-success">
+                ${msg}
             </div>
         </c:if>
 

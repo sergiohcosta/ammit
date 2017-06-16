@@ -35,6 +35,8 @@ public class Gerenciar implements Logica {
         questoes = qDao.listarQuestoes();
 
         req.setAttribute("questoes", questoes);
+        req.setAttribute("status", req.getParameter("status"));
+        req.setAttribute("msg", req.getParameter("msg"));
 
         return "/pages/questao/gerenciar.jsp";
 

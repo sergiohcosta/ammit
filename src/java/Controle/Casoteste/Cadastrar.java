@@ -1,22 +1,26 @@
 package Controle.Casoteste;
 
-import Controle.Questao.*;
 import beans.Questao;
-import beans.Usuario;
-
-import Controle.Usuario.*;
+import beans.Casoteste;
 import Controle.Logica;
 import DAO.CasotesteDAO;
-
-import DAO.UsuarioDAO;
 import DAO.QuestaoDAO;
-import beans.Casoteste;
+import java.io.InputStream;
 
 import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
+/* PARAMETROS OBRIGATORIOS:
+qId: para saber de qual questão estamos tratando
+ */
+
+ /* PARAMETROS OPCIONAIS:
+op: para saber no POST se é cadastro ou alteracao
+id: se for > 0, editar
+ */
 public class Cadastrar implements Logica {
 
     @Override
@@ -24,35 +28,44 @@ public class Cadastrar implements Logica {
 
         System.out.println("Executando a logica " + this.getClass().getName() + " ...");
 
-        //UsuarioDAO uDao = new UsuarioDAO();
-        //req.setAttribute("listaProfessores", uDao.listarProfessores());
         QuestaoDAO qDao = new QuestaoDAO();
+        Questao q = new Questao();
+
         CasotesteDAO ctDao = new CasotesteDAO();
         Casoteste cteste;
-        
-        Questao q;
+
         int questaoId = 0;
+        int casostesteId = 0;
 
         try {
             questaoId = Integer.parseInt(req.getParameter("qId"));
-            qDao = new QuestaoDAO();
             q = qDao.obtemQuestao(questaoId);
 
             if (q.getId() < 1) {
                 throw new NumberFormatException();
             }
-            
+
             req.setAttribute("q", q);
 
         } catch (NumberFormatException e) {
             req.setAttribute("status", 0);
-            req.setAttribute("msgErro", "Selecione uma questão para gerenciar seus Casos de Teste");
+            req.setAttribute("msg", "Selecione uma questão para gerenciar seus Casos de Teste");
             req.setAttribute("redirTo", "QuestaoGerenciar");
             return "/redirect.jsp";
         }
 
         // So tenta processar informacoes se for um POST
         if (req.getMethod().equals("POST")) {
+
+            try {
+                casostesteId = Integer.parseInt(req.getParameter("id"));
+
+            } catch (NumberFormatException e) {
+                req.setAttribute("status", 0);
+                req.setAttribute("msg", "Selecione um Caso de Teste para gerenciar");
+                req.setAttribute("redirTo", "CasoTesteGerenciar");
+                return "/redirect.jsp";
+            }
 
             // seta a mensagem como cadastrado como sucesso     
             req.setAttribute("status", "1");
@@ -75,37 +88,58 @@ public class Cadastrar implements Logica {
                 req.setAttribute("errConteudo", "1");
                 msgErro.add("O campo <b>Conteudo</b> deve conter pelo menos 3 caracteres");
             }
-            
+
+            String tipo_entradas = req.getParameter("tipo_entradas");
             String ammit_seed = req.getParameter("ammit_seed");
-
-            if (ammit_seed.length() < 3) {
-                req.setAttribute("status", "0");
-                req.setAttribute("errAmmitSeed", "1");
-                msgErro.add("O campo <b>Sintaxe Ammit</b> deve conter pelo menos 3 caracteres");
-            }
-            
-            String ammit_qtde = req.getParameter("ammit_qtde");
-
-            if (ammit_qtde.length() < 3) {
-                req.setAttribute("status", "0");
-                req.setAttribute("errAmmitQtde", "1");
-                msgErro.add("A <b>Quantidade de linhas</b> deve ser pelo menos 1");
-            }
-            
+            int ammit_qtde = Integer.parseInt((req.getParameter("ammit_qtde")));
             String entrada = req.getParameter("entrada");
-            // TODO: validar isso somente se entrada manual for selecionada
-            if (entrada.length() < 3) {
-                req.setAttribute("status", "0");
-                req.setAttribute("errEntrada", "1");
-                msgErro.add("O campo <b>Entrada</b> deve conter pelo menos 3 caracteres");
+
+            if ("entradaammit".equals(tipo_entradas)) {
+                if (ammit_seed.length() < 1) {
+                    req.setAttribute("status", "0");
+                    req.setAttribute("errAmmitSeed", "1");
+                    msgErro.add("O campo <b>Sintaxe Ammit</b> deve conter pelo menos 3 caracteres");
+                }
+
+                if (ammit_qtde < 0) {
+                    req.setAttribute("status", "0");
+                    req.setAttribute("errAmmitQtde", "1");
+                    msgErro.add("A quantidade de linhas gerada pelo Ammit deve ser pelo menos 1");
+                }
+            } else {
+
+                if (entrada.length() < 1) {
+                    req.setAttribute("status", "0");
+                    req.setAttribute("errEntrada", "1");
+                    msgErro.add("O campo <b>Entrada</b> deve conter pelo menos 1 caracteres");
+                }
+
             }
-            
+
+            String tipo_saidas = req.getParameter("tipo_saidas");
             String saida = req.getParameter("saida");
-            // TODO: validar isso somente se saida manual for selecionada
-            if (saida.length() < 3) {
-                req.setAttribute("status", "0");
-                req.setAttribute("errEntrada", "1");
-                msgErro.add("O campo <b>Saída</b> deve conter pelo menos 3 caracteres");
+            String codigofonte_linguagem = req.getParameter("codigofonte_linguagem");
+            InputStream inputStream = null;
+
+            if ("saidacodigo".equals(tipo_saidas)) {
+
+                Part filePart = req.getPart("codigofonte");
+                if (filePart != null) {
+
+                    System.out.println(filePart.getName());
+                    System.out.println(filePart.getSize());
+                    System.out.println(filePart.getContentType());
+
+                    inputStream = filePart.getInputStream();
+                }
+
+            } else {
+                if (saida.length() < 1) {
+                    req.setAttribute("status", "0");
+                    req.setAttribute("errEntrada", "1");
+                    msgErro.add("O campo <b>Saída</b> deve conter pelo menos 1 caracter");
+                }
+
             }
 
             req.setAttribute("msgErro", msgErro);
@@ -119,31 +153,56 @@ public class Cadastrar implements Logica {
                 cteste.setQuestao(questaoId);
                 cteste.setTitulo(titulo);
                 cteste.setConteudo(conteudo);
+                cteste.setAmmit_seed(ammit_seed);
+                cteste.setAmmit_qtde(ammit_qtde);
+                cteste.setEntrada(entrada);
+                cteste.setSaida(saida);
+                cteste.setCodigofonte(inputStream);
+                cteste.setCodigofonte_linguagem(codigofonte_linguagem);
 
-
-                if (questaoId == 0) {
+                if (casostesteId == 0) {
                     System.out.println("Cadastrando: " + q);
                     int lastId = ctDao.insereCasoteste(cteste);
                     //q.setId(lastId);
 
-                    // em vez de mandar de volta pro formulario, manda pra parte 2 pra cadastrar casos de teste
-                    //req.setAttribute("q", q);
-                    //req.setAttribute("redirTo", "CasoTesteGerenciar");
-                    //return "/redirect.jsp";
-
+                    req.setAttribute("q", q);
+                    req.setAttribute("status", "1");
+                    req.setAttribute("msg", "Caso de teste cadastrado com sucesso");
+                    req.setAttribute("redirTo", "CasoTesteGerenciar");
+                    return "/redirect.jsp";
                 } else {
 
                     System.out.println("Editando: " + q);
                     ctDao.alteraCasoteste(cteste);
                 }
-                
+
             }
         } else {
 
             String op = (String) req.getParameter("op");
             if ("editar".equals(op)) {
 
-                req.setAttribute("p", ctDao.obtemCasoteste(Integer.valueOf(req.getParameter("qId"))));
+                try {
+                    casostesteId = Integer.parseInt(req.getParameter("id"));
+                    cteste = ctDao.obtemCasoteste(Integer.valueOf(req.getParameter("id")));
+                    
+                    boolean sourceUpado;
+                    if(cteste.getCodigofonte() == null)
+                        sourceUpado =  false;
+                    else
+                        sourceUpado = true;
+                    
+                    req.setAttribute("p", cteste);
+                    req.setAttribute("sourceUpado", sourceUpado);
+
+                } catch (NumberFormatException e) {
+                    req.setAttribute("status", 0);
+                    req.setAttribute("msg", "Selecione um Caso de Teste para gerenciar");
+                    req.setAttribute("redirTo", "CasoTesteGerenciar");
+                    return "/redirect.jsp";
+                }
+
+                
 
             }
 
