@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class RespostaDAO {
     private Connection con = null;
-    private PreparedStatement stmtListar, stmtAtualizar, stmtObtemResposta, stmtInserir, stmtLastId,stmtRemover;
+    private PreparedStatement stmtListar, stmtObtemResposta, stmtInserir, stmtLastId,stmtRemover, stmtCorrigir;
 
     public RespostaDAO() throws SQLException, ClassNotFoundException {
         con = ConnectionFactory.getConnection();
@@ -29,27 +29,25 @@ public class RespostaDAO {
         stmtListar = con.prepareStatement(
                 "SELECT * FROM resposta"
         );
-        stmtAtualizar = con.prepareStatement(
-                "UPDATE resposta SET "
-                + "titulo = ?"
-                + ",aluno = ?"
-                + ",questao = ?"
-                + " WHERE id = ?"
-        );
+        
         stmtObtemResposta = con.prepareStatement(
                 "SELECT * FROM resposta WHERE id=?"
         );
 
         stmtInserir = con.prepareStatement(
                 "INSERT INTO resposta ("
-                + "titulo, aluno, questao"
+                + "aluno, questao, codfonte, estado"
                 + ") VALUES ("
-                + "?, ?, ?"
+                + "?, ?, ?, ?"
                 + ")"
         );
         
         stmtRemover = con.prepareStatement(
                 "DELETE FROM resposta WHERE id=?"
+        );
+        
+        stmtCorrigir = con.prepareStatement(
+                "UPDATE resposta SET estado=? WHERE id=?"
         );
 
     }
@@ -63,10 +61,11 @@ public class RespostaDAO {
         while (rs1.next()) {
             Resposta q = new Resposta();
             q.setId(rs1.getInt("id"));
-            q.setTitulo(rs1.getString("titulo"));
             q.setAluno(rs1.getInt("aluno"));
             q.setQuestao(rs1.getInt("questao"));
-
+            q.setCodigofonte(rs1.getBinaryStream("codfonte"));
+            q.setEstado(rs1.getInt("estado"));
+            
             listaRespostas.add(q);
 
         }
@@ -75,24 +74,6 @@ public class RespostaDAO {
 
     }
 
-    public int alteraResposta(Resposta q)
-            throws SQLException {
-        /* 
-     1 titulo = ?"
-     2 + ",aluno = ?"
-     3 + ",questao = ?"
-     4 + " WHERE id = ?" */
-
-        stmtAtualizar.setString(1, q.getTitulo());
-        stmtAtualizar.setInt(2, q.getAluno());
-        stmtAtualizar.setInt(3, q.getQuestao());
-        stmtAtualizar.setInt(4, q.getId());
-
-        System.out.println(stmtAtualizar);
-
-        return stmtAtualizar.executeUpdate();
-
-    }
 
     public Resposta obtemResposta(int id) throws SQLException {
 
@@ -105,8 +86,9 @@ public class RespostaDAO {
         if (rs1.next()) {
             q.setId(rs1.getInt("id"));
             q.setAluno(rs1.getInt("aluno"));
-            q.setTitulo(rs1.getString("titulo"));
             q.setQuestao(rs1.getInt("questao"));
+            q.setCodigofonte(rs1.getBinaryStream("codfonte"));
+            q.setEstado(rs1.getInt("estado"));
         }
 
         return q;
@@ -114,12 +96,13 @@ public class RespostaDAO {
 
     public int insereResposta(Resposta q)
             throws SQLException {
-        // INSERT INTO resposta (titulo, aluno, questao)
-        // VALUES              (1,      2,         3        )
+        // INSERT INTO resposta (aluno, questao, codfonte, estado)
+        // VALUES              (1,      2,         3    , 4    )
 
-        stmtInserir.setString(1, q.getTitulo());
-        stmtInserir.setInt(2, q.getAluno());
-        stmtInserir.setInt(3, q.getQuestao());
+        stmtInserir.setInt(1, q.getAluno());
+        stmtInserir.setInt(2, q.getQuestao());
+        stmtInserir.setBlob(3, q.getCodigofonte());
+        stmtInserir.setInt(4, q.getEstado());
 
         System.out.println(stmtInserir);
 

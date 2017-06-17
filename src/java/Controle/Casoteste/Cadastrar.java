@@ -113,7 +113,7 @@ public class Cadastrar implements Logica {
                 if (entrada.length() < 1) {
                     req.setAttribute("status", "0");
                     req.setAttribute("errEntrada", "1");
-                    msgErro.add("O campo <b>Entrada</b> deve conter pelo menos 1 caracteres");
+                    msgErro.add("O campo <b>Entrada</b> deve conter pelo menos 1 caracter");
                 }
 
             }

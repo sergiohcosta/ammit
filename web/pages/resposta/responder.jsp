@@ -42,10 +42,10 @@
                     <div class="col-lg-6">
 
       
-                        <form role="form" id="questao_cadastrar_form" method="post" action="Controle" >
+                        <form role="form" id="resposta_cadastrar_form" enctype="multipart/form-data" method="post" action="Controle" >
                             <input type="hidden" name="logica" value="Resposta.Responder">
-                            <input type="hidden" name="id" value="<jsp:getProperty name="p" property="id" />">
-                            
+                            <input type="hidden" name="qid" value="<jsp:getProperty name="p" property="id" />">
+                            <input type="hidden" name="aid" value="${sessionScope.usuario.id}">
 
                             <div id="BoxEnunciado" class="form-group">
                                 <label>Enunciado:</label><br>
@@ -89,23 +89,7 @@
                             $("#LabelEnunciado").toggleClass("text-danger");
                             </c:if>
 
-
-                            $("#questao_cadastrar_form").validate(
-                                    {
-                                        rules: {
-                                            professor: {
-                                                required: true
-                                            },
-                                            titulo: {
-                                                required: true,
-                                                minlength: 3
-                                            },
-                                            enunciado: {
-                                                required: true,
-                                                minlength: 3
-                                            }
-                                        }
-                                    });</script>
+</script>
                     </div>
                     <!-- /.col-lg-6 (nested) -->
                 </div>

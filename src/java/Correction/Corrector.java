@@ -40,6 +40,12 @@ public abstract class Corrector {
         os.write(input.getBytes());
         os.flush();
         pro.waitFor();
-        return is.readLine();
+        String x=is.readLine(), response="";
+        while (x != null){
+            response+=x;
+            x=is.readLine();
+            if (x!= null) response+="\r\n";
+        }
+        return response;
     }
 }

@@ -5,6 +5,7 @@
  */
 package beans;
 
+import java.io.InputStream;
 import java.io.Serializable;
 
 /**
@@ -20,15 +21,7 @@ public class Resposta  implements Serializable {
     public int getId() {return id;}
     public void setId(int id) {this.id = id;}
 
-    private String titulo = "";
-
-    public String getTitulo() {
-        return titulo;
-    }
-
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
-    }
+    
     
     private int questao = 0;
     
@@ -56,4 +49,35 @@ public class Resposta  implements Serializable {
         this.aluno = aluno;
     }
     
+    private int estado;
+
+    /**
+     * @return the estado
+     */
+    public int getEstado() {
+        return estado;
+    }
+
+    /**
+     * @param estado the estado to set
+     */
+    public void setEstado(int estado) {
+        this.estado = estado;
+    }
+    
+    private InputStream codigofonte = null;
+
+    /**
+     * @return the codigofonte
+     */
+    public InputStream getCodigofonte() {
+        return codigofonte;
+    }
+
+    /**
+     * @param codigofonte the codigofonte to set
+     */
+    public void setCodigofonte(InputStream codigofonte) {
+        this.codigofonte = codigofonte;
+    }
 }
