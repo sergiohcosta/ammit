@@ -9,6 +9,8 @@ import java.util.List;
 import Utilidades.PasswordEncryptionService;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UsuarioDAO {
 
@@ -97,7 +99,7 @@ public class UsuarioDAO {
 
         List<Usuario> listaUsuarios = new ArrayList<>();
 
-        ResultSet rs1 = stmtListar.executeQuery();
+        ResultSet rs1 = stmtListarProfessor.executeQuery();
 
         while (rs1.next()) {
             Usuario c = new Usuario();
@@ -115,13 +117,38 @@ public class UsuarioDAO {
 
     }
 
+    public Map<Integer, String> listarProfessoresArr() throws SQLException {
+
+        List<Usuario> listaUsuarios = new ArrayList<>();
+
+        ResultSet rs1 = stmtListarProfessor.executeQuery();
+
+        int rowcount = 0;
+        if (rs1.last()) {
+            rowcount = rs1.getRow();
+            rs1.beforeFirst(); // not rs.first() because the rs.next() below will move on, missing the first element
+        }
+
+        Map<Integer, String> map = new HashMap<Integer, String>();
+        
+        String[] ret = new String[rowcount];
+
+        while (rs1.next()) {
+            map.put(rs1.getInt("id"),rs1.getString("nome"));
+            
+        }
+
+        return map;
+
+    }
+
     public int alteraUsuario(Usuario c)
             throws SQLException, ParseException, NoSuchAlgorithmException, InvalidKeySpecException {
 
         PasswordEncryptionService PES = new PasswordEncryptionService();
 
         if (c.getSenha() != "") {
-            
+
             /*  "UPDATE usuario SET "
                1 + "nome = ?"
                2 + ",email = ?"
@@ -130,7 +157,6 @@ public class UsuarioDAO {
                5 + ",pwd = ?"
                6 + ",salt = ?"
                7 + " WHERE id = ?"  */
-            
             byte[] salt = PES.generateSalt();
             byte[] pwd = PES.getEncryptedPassword(c.getSenha(), salt);
             stmtAtualizar.setString(1, c.getNome());
@@ -144,8 +170,8 @@ public class UsuarioDAO {
             System.out.println(stmtAtualizar);
             return stmtAtualizar.executeUpdate();
         } else {
-            
-        /*  UPDATE usuario SET "
+
+            /*  UPDATE usuario SET "
                1 + "nome = ?"
                2 + ",email = ?"
                3 + ",perfil = ?"
@@ -156,7 +182,7 @@ public class UsuarioDAO {
             stmtAtualizarManterSenha.setString(3, c.getPerfil());
             stmtAtualizarManterSenha.setBoolean(4, c.isSituacao());
             stmtAtualizarManterSenha.setInt(4, c.getId());
-            
+
             System.out.println(stmtAtualizarManterSenha);
             return stmtAtualizarManterSenha.executeUpdate();
         }

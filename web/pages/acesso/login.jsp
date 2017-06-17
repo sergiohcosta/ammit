@@ -97,7 +97,9 @@
                     <br><br>
                     Logins para testes
                     <br>
-                    TBD
+                    Administrador: admin/admin
+                    <br>
+                    Professor: prof1@prof1.com/prof1
                 </div>
 
             </div>

@@ -68,7 +68,7 @@
                         <tr class="odd gradeA">
                             <td>${questao.titulo}</td>
                             <c:if test="${sessionScope.usuario.perfil == 'Admin'}">
-                                <td>${questao.professor}</td>
+                                <td>${professores[questao.professor]}</td>
                             </c:if>
                             <td class="CelOpcoes" align="center">
                                 <a href="Controle?logica=Questao.Cadastrar&op=editar&pId=${questao.id}">
