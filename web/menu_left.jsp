@@ -28,6 +28,7 @@
         </li>
         </c:if>
 
+        <c:if test="${sessionScope.usuario.perfil == 'Professor'}">
         <li class="MenuGerente">
             <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i>Questões<span class="fa arrow"></span></a>
             <ul class="nav nav-second-level">
@@ -40,6 +41,7 @@
             </ul>
             <!-- /.nav-second-level -->
         </li>
+        </c:if>
         
         <c:if test="${sessionScope.usuario.perfil == 'Aluno'}">
         <li class="MenuGerente">

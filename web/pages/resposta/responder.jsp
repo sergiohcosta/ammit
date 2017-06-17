@@ -15,7 +15,7 @@
 </div>
 
 <c:if test="${status=='1'}">
-    <div id="sucesso" class="alert alert-success">Questão cadastrada.</div>
+    <div id="sucesso" class="alert alert-success">Resposta cadastrada.</div>
 </c:if>
 <c:if test="${status=='0'}">
     <div class="panel panel-red">
