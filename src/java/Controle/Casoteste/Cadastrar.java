@@ -122,33 +122,45 @@ public class Cadastrar implements Logica {
             String saida = req.getParameter("saida");
             String codigofonte_linguagem = req.getParameter("codigofonte_linguagem");
             InputStream inputStream = null;
+            boolean doFileUpload = true;
 
+            // eu quero trabalhar com arquivo upado, entao...
             if ("saidacodigo".equals(tipo_saidas)) {
-
                 Part filePart = req.getPart("codigofonte");
                 if (filePart != null) {
-
+                    // Mostro alguns debugs...
                     System.out.println("getName=" + filePart.getName());
                     System.out.println("getSize=" + filePart.getSize());
                     System.out.println("getContentType=" + filePart.getContentType());
-                    if ("text/plain".equals(filePart.getContentType())) {
+
+                    // Se o tamanho do arquivo for vazio...
+                    if (filePart.getSize() <= 0) {
+                        // Se for um CADASTRO, É UM ERRO
+                        if (casostesteId == 0) {
+                            inputStream = null;
+                            req.setAttribute("status", "0");
+                            req.setAttribute("errCodigofonte", "1");
+                            msgErro.add("O <b>Código fonte</b> deve ser um arquivo de texto plano");
+                        } // Se for um UPDATE, CONFIGURE PRA NAO MEXER NO CAMPO LA NA FRENTE
+                        else {
+                            doFileUpload = false;
+                        }
+                    } // se o tamanho do arquivo NAO for vazio...
+                    else {
+                        // CADASTRE ou SOBREPONHA (whatever) o arquivo upado
                         inputStream = filePart.getInputStream();
                         saida = "";
-                    } else {
-                        inputStream = null;
-                        req.setAttribute("status", "0");
-                        req.setAttribute("errCodigofonte", "1");
-                        msgErro.add("O <b>Código fonte</b> deve ser um arquivo de texto plano");
                     }
                 }
 
-            } else {
+            } // eu NAO quero trabalhar com arquivo upado, entao...
+            else {
+                // eu sou obrigado a ter uma SAIDA MANUAL digitada
                 if (saida.length() < 1) {
                     req.setAttribute("status", "0");
                     req.setAttribute("errSaida", "1");
                     msgErro.add("O campo <b>Saída</b> deve conter pelo menos 1 caracter");
                 }
-
             }
 
             req.setAttribute("msgErro", msgErro);
@@ -158,7 +170,7 @@ public class Cadastrar implements Logica {
 
                 cteste = new Casoteste();
 
-                cteste.setId(questaoId);
+                cteste.setId(casostesteId);
                 cteste.setQuestao(questaoId);
                 cteste.setTitulo(titulo);
                 cteste.setConteudo(conteudo);
@@ -182,7 +194,11 @@ public class Cadastrar implements Logica {
                 } else {
 
                     System.out.println("Editando: " + cteste);
-                    ctDao.alteraCasoteste(cteste);
+                    
+                    if(doFileUpload)
+                        ctDao.alteraCasoteste(cteste);
+                    else
+                        ctDao.alteraCasotesteSemUpload(cteste);
 
                     req.setAttribute("msg", "Caso de teste alterado com sucesso");
                 }

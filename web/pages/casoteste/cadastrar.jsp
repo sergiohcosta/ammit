@@ -86,9 +86,10 @@
                                     </c:forEach>
                                 </select>
                                 <input type='button' id="gerar" value='Gerar'>
+                                <input type='button' id="ajuda" value='Aprenda mais sobre o AMMIT'>
 
                             </div>
-                            
+
                         </div>
                         <div class="col-lg-6">
                             <div class="panel panel-default">
@@ -207,11 +208,45 @@
     $("#LabelSaida").toggleClass("text-danger");
     </c:if>
 
+    <c:if test="${not empty p.ammit_seed}">
     $("#tipo_entradas_ammit").attr("checked", true);
-    desativarEntradaManual();
+    $("#tipo_saidas_seletor_manual").hide();
+    $("#BoxSaidasManual").hide();
+    $("#BoxEntradasManual").hide();
+    </c:if>
 
+    <c:if test="${not empty p.ammit_seed}">
+    $("#tipo_entradas_ammit").attr("checked", true);
     $("#tipo_saidas_codigo").attr("checked", true);
-    desativarSaidaManual();
+    $("#tipo_saidas_seletor_manual").hide();
+    $("#BoxEntradasManual").hide();
+    $("#BoxSaidasManual").hide();
+    </c:if>
+
+    <c:if test="${not empty p.entrada}">
+    $("#tipo_entradas_manual").attr("checked", true);
+    $("#BoxEntradasManual").show();
+    $("#tipo_entradas_ammit").show();
+    $("#BoxEntradasAmmit").hide();
+    
+    </c:if>
+
+    <c:if test="${not empty p.saida}">
+    $("#tipo_saidas_manual").attr("checked", true);
+    $("#tipo_saidas_seletor_codigo").show();
+    $("#tipo_saidas_seletor_manual").show();
+    $("#BoxSaidasManual").show();
+    $("#BoxSaidasCodigo").hide();
+    </c:if>
+
+    <c:if test="${empty p.saida}">
+    
+    $("#tipo_saidas_seletor_codigo").show();
+    $("#BoxSaidasCodigo").show();
+    $("#tipo_saidas_seletor_manual").show();
+    $("#BoxSaidasManual").hide();
+    $("#tipo_saidas_codigo").attr("checked", true);
+    </c:if>
 
     $("#gerar").click(function () {
         $("#ErroAmmit").hide();
@@ -229,18 +264,25 @@
 
     $(".tipo_entradas").click(function () {
         if ($("#tipo_entradas_ammit").is(':checked')) {
-            desativarEntradaManual();
             $("#tipo_saidas_seletor_manual").hide();
+            $("#BoxEntradasAmmit").show();
+            $("#BoxSaidasManual").hide();
+            $("#BoxEntradasManual").hide();
         } else {
-            desativarEntradaAmmit();
+            $("#tipo_saidas_seletor_manual").show();
+            $("#BoxEntradasAmmit").hide();
+            $("#BoxEntradasManual").show();
         }
     });
 
     $(".tipo_saidas").click(function () {
+        // se o ammit tiver selecionado
         if ($("#tipo_saidas_codigo").is(':checked')) {
-            desativarSaidaManual();
+            $("#BoxSaidasManual").hide();
+             $("#BoxSaidasCodigo").show();
         } else {
-            desativarSaidaCodigo();
+            $("#BoxSaidasCodigo").hide();
+            $("#BoxSaidasManual").show();
         }
     });
 
@@ -260,6 +302,14 @@
 
         $("#BoxSaidasCodigo").hide();
         $("#BoxSaidasManual").show();
+        $("#tipo_saidas_seletor_manual").show();
+    }
+    function ativarSaidaManual() {
+
+        $("#tipo_saidas_seletor_manual").hide();
+        $("#BoxSaidasManual").show();
+        $("#BoxSaidasCodigo").show();
+
     }
     function desativarSaidaManual() {
 

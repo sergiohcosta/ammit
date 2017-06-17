@@ -9,7 +9,7 @@ import java.util.List;
 public class CasotesteDAO {
 
     private Connection con = null;
-    private PreparedStatement stmtListar, stmtAtualizar, stmtObtemCasoteste, stmtInserir, stmtLastId, stmtRemover;
+    private PreparedStatement stmtListar, stmtAtualizar, stmtAtualizarSemUpload, stmtObtemCasoteste, stmtInserir, stmtLastId, stmtRemover;
 
     public CasotesteDAO() throws SQLException, ClassNotFoundException {
         con = ConnectionFactory.getConnection();
@@ -29,6 +29,18 @@ public class CasotesteDAO {
                 + ",entrada = ?"
                 + ",saida = ?"
                 + ",codigofonte = ?"
+                + ",codigofonte_linguagem = ?"
+                + " WHERE id = ?"
+        );
+        stmtAtualizarSemUpload = con.prepareStatement(
+                "UPDATE casoteste SET "
+                + "titulo = ?"
+                + ",conteudo = ?"
+                + ",questao = ?"
+                + ",ammit_seed = ?"
+                + ",ammit_qtde = ?"
+                + ",entrada = ?"
+                + ",saida = ?"
                 + ",codigofonte_linguagem = ?"
                 + " WHERE id = ?"
         );
@@ -105,6 +117,35 @@ public class CasotesteDAO {
         System.out.println(stmtAtualizar);
 
         return stmtAtualizar.executeUpdate();
+
+    }
+
+    public int alteraCasotesteSemUpload(Casoteste ct)
+            throws SQLException {
+        /* 
+               1 + "titulo = ?"
+               2 + ",conteudo = ?"
+               3  + ",questao = ?"
+               4 + ",ammit_seed = ?"
+               5 + ",ammit_qtde = ?"
+               6 + ",entrada = ?"
+               7 + ",saida = ?"
+               8 + ",codigofonte_linguagem = ?"
+               9 + " WHERE id = ?" */
+
+        stmtAtualizarSemUpload.setString(1, ct.getTitulo());
+        stmtAtualizarSemUpload.setString(2, ct.getConteudo());
+        stmtAtualizarSemUpload.setInt(3, ct.getQuestao());
+        stmtAtualizarSemUpload.setString(4, ct.getAmmit_seed());
+        stmtAtualizarSemUpload.setInt(5, ct.getAmmit_qtde());
+        stmtAtualizarSemUpload.setString(6, ct.getEntrada());
+        stmtAtualizarSemUpload.setString(7, ct.getSaida());
+        stmtAtualizarSemUpload.setString(8, ct.getCodigofonte_linguagem());
+        stmtAtualizarSemUpload.setInt(9, ct.getId());
+
+        System.out.println(stmtAtualizarSemUpload);
+
+        return stmtAtualizarSemUpload.executeUpdate();
 
     }
 
