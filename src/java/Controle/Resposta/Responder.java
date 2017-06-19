@@ -83,12 +83,10 @@ public class Responder implements Logica{
                 System.out.println("Cadastrando: " + r);
                 int lastId = rDao.insereResposta(r);
                 r.setId(lastId);
-                /*
-                // em vez de mandar de volta pro formulario, manda pra parte 2 pra cadastrar casos de teste
-                req.setAttribute("q", q);
-                req.setAttribute("redirTo", "CasoTesteGerenciar");
+                req.setAttribute("rId", lastId);
+                req.setAttribute("redirTo", "Corrigir");
                 return "/redirect.jsp";
-*/
+
                 
             }
         } else {

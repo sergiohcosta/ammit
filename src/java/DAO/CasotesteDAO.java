@@ -73,13 +73,13 @@ public class CasotesteDAO {
             Casoteste ct = new Casoteste();
             ct.setId(rs1.getInt("id"));
             ct.setTitulo(rs1.getString("titulo"));
-            /*ct.setConteudo(rs1.getString("conteudo"));
+            ct.setConteudo(rs1.getString("conteudo"));
             ct.setQuestao(rs1.getInt("questao"));
             ct.setAmmit_seed(rs1.getString("ammit_seed"));
             ct.setAmmit_qtde(rs1.getInt("ammit_qtde"));
             ct.setEntrada(rs1.getString("entrada"));
             ct.setSaida(rs1.getString("Saida"));
-            ct.setCodigofonte(rs1.getBlob("codigofonte"));*/
+            ct.setCodigofonte(rs1.getBinaryStream("codigofonte"));
 
             listaCasosteste.add(ct);
 

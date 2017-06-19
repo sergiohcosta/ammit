@@ -51,7 +51,14 @@ public class RespostaDAO {
         );
 
     }
-
+    
+    public int corrigeResposta(Resposta r) throws SQLException{
+        stmtCorrigir.setInt(1, r.getEstado());
+        stmtCorrigir.setInt(2, r.getId());
+        
+        return stmtCorrigir.executeUpdate();
+    }
+    
     public List<Resposta> listarRespostas() throws SQLException {
 
         List<Resposta> listaRespostas = new ArrayList<>();

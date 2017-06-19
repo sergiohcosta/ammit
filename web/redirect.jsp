@@ -16,3 +16,7 @@
 <c:redirect url="/Controle?logica=Usuario.Gerenciar&status=${status}&msg=${msg}"/>
 </c:if>
 
+<c:if test="${redirTo == 'Corrigir'}">
+<c:redirect url="/Controle?logica=Resposta.Corrigir&rId=${rId}"/>
+</c:if>
+

@@ -13,17 +13,61 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author sergio
  */
-public class comp {
-
+public class Compilador {
+    private static final String TCC="C:\\Users\\Renam\\Downloads\\tcc\\tcc.exe -o";
+    
+    public static CodigoCompilado compilar(String path){
+        CodigoCompilado c=new CodigoCompilado();
+        
+        String exec=path.replaceFirst(".c", ".exe");
+        Runtime r=Runtime.getRuntime();
+        try{
+            Process p=r.exec(TCC+exec+" "+path);
+            if (p.waitFor(5, TimeUnit.SECONDS)){
+                if (p.exitValue()==0){
+                    c.setSucesso(true);
+                    c.setExec(exec);
+                }
+                else{
+                    c.setSucesso(false);
+                    BufferedReader error = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                    String x=error.readLine(), response="";
+                    while (x != null){
+                        response+=x;
+                        x=error.readLine();
+                        if (x!= null) response+="\r\n";
+                    }
+                    c.setErros(response);
+                }
+            }
+            else{
+                c.setSucesso(false);
+                c.setErros("Tempo-limite para compilação excedido");
+            }
+        }
+        catch(IOException io){
+            c.setSucesso(false);
+            c.setErros(io.getMessage());
+        } catch (InterruptedException ex) {
+            c.setSucesso(false);
+            c.setErros(ex.getMessage());
+        }
+        return c;
+    }
+    
+    /*
     private static void printLines(String name, InputStream ins) throws Exception {
         String line = null;
         BufferedReader in = new BufferedReader(
@@ -74,5 +118,5 @@ public class comp {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 }
