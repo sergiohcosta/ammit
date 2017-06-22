@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class RespostaDAO {
     private Connection con = null;
-    private PreparedStatement stmtListar, stmtObtemResposta, stmtInserir, stmtLastId,stmtRemover, stmtCorrigir;
+    private PreparedStatement stmtListar, stmtListarAluno, stmtObtemResposta, stmtInserir, stmtLastId,stmtRemover, stmtCorrigir;
 
     public RespostaDAO() throws SQLException, ClassNotFoundException {
         con = ConnectionFactory.getConnection();
@@ -28,6 +28,10 @@ public class RespostaDAO {
 
         stmtListar = con.prepareStatement(
                 "SELECT * FROM resposta"
+        );
+        
+        stmtListarAluno = con.prepareStatement(
+                "SELECT * FROM resposta where aluno=?"
         );
         
         stmtObtemResposta = con.prepareStatement(
@@ -64,6 +68,29 @@ public class RespostaDAO {
         List<Resposta> listaRespostas = new ArrayList<>();
 
         ResultSet rs1 = stmtListar.executeQuery();
+
+        while (rs1.next()) {
+            Resposta q = new Resposta();
+            q.setId(rs1.getInt("id"));
+            q.setAluno(rs1.getInt("aluno"));
+            q.setQuestao(rs1.getInt("questao"));
+            q.setCodigofonte(rs1.getBinaryStream("codfonte"));
+            q.setEstado(rs1.getInt("estado"));
+            
+            listaRespostas.add(q);
+
+        }
+
+        return listaRespostas;
+
+    }
+    
+    public List<Resposta> listarRespostasAluno(int aId) throws SQLException {
+
+        List<Resposta> listaRespostas = new ArrayList<>();
+        stmtListarAluno.setInt(1, aId);
+        
+        ResultSet rs1 = stmtListarAluno.executeQuery();
 
         while (rs1.next()) {
             Resposta q = new Resposta();
