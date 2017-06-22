@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class Corrigir implements Logica {
     
-    private final String TMP="C:\\tmp\\";
+    private final String TMP="C:\\tmp\\"; //todo - alterar para caminho no servidor
     private final String CTFIM="\r?\n<--FIM-->\r?\n?";
     
     private boolean salvaArquivo(String path, InputStream src){
@@ -52,9 +52,8 @@ public class Corrigir implements Logica {
         Resposta r = rdao.obtemResposta(Integer.parseInt(req.getParameter("rId")));
         List<Casoteste> casos = new CasotesteDAO().listarCasosteste(r.getQuestao());
         List<String> outputs = new ArrayList();
+        List<String> erros = new ArrayList();
         BaseSolution b=new BaseSolution();
-        
-        if(casos.size()==0){ r.setEstado(-5);return "/pages/resposta/corrigir.jsp";}
         
         int ctExecutados=0, ctSucesso=0;
         
@@ -83,12 +82,12 @@ public class Corrigir implements Logica {
                                 outputs.add("Fim do caso de teste "+caso.getTitulo());
                             }
                             else{
-                                outputs.add("Caso de teste "+caso.getTitulo()+" ignorado: erro ao compilar código de teste");
-                                outputs.add(cprof.getErros());
+                                erros.add("Caso de teste "+caso.getTitulo()+" ignorado: erro ao compilar código de teste");
+                                erros.add(cprof.getErros());
                             }
                         }
                         else{
-                            outputs.add("Caso de teste "+caso.getTitulo()+" ignorado: erro ao salvar código de teste");
+                            erros.add("Caso de teste "+caso.getTitulo()+" ignorado: erro ao salvar código de teste");
                         }
                     }
                     else if(!caso.getEntrada().isEmpty()){// se for um caso de teste manual                    
@@ -110,7 +109,7 @@ public class Corrigir implements Logica {
                                 outputs.add("Fim do caso de teste "+caso.getTitulo());
                             }
                             else{
-                                outputs.add("Caso de teste "+caso.getTitulo()+" ignorado: o número de saídas difere do número de entradas");
+                                erros.add("Caso de teste "+caso.getTitulo()+" ignorado: o número de saídas difere do número de entradas");
                             }
                         }
                         else if (salvaArquivo(TMP+caso.getTitulo(), caso.getCodigofonte())){ //se for CTM com código para comparar
@@ -130,44 +129,49 @@ public class Corrigir implements Logica {
                                 outputs.add("Fim do caso de teste "+caso.getTitulo());
                             }
                             else{
-                                outputs.add("Caso de teste "+caso.getTitulo()+" ignorado: erro ao compilar código de teste");
+                                erros.add("Caso de teste "+caso.getTitulo()+" ignorado: erro ao compilar código de teste");
                             }
                         }
                         else{//se não for nenhum dos dois, é um erro
-                            outputs.add("Caso de teste "+caso.getTitulo()+" ignorado: saídas do caso de teste são inválidas");
+                            erros.add("Caso de teste "+caso.getTitulo()+" ignorado: saídas do caso de teste são inválidas");
                         }
                     }
                     else{//se não for nenhum dos dois, é um erro
-                        outputs.add("Caso de teste "+caso.getTitulo()+" ignorado: o caso de teste é inválido");
+                        erros.add("Caso de teste "+caso.getTitulo()+" ignorado: o caso de teste é inválido");
                     }
                 }
             }
             else{
-                outputs.add(c.getErros());
+                erros.add("O código submetido não compila");
+                erros.add(c.getErros());
                 r.setEstado(1); //erro de compilação código do aluno
             }
         }
         else{
-            outputs.add("Ocorreu um erro interno. Tente novamente");
+            erros.add("Ocorreu um erro interno. Tente novamente");
             r.setEstado(-3); //erro de arquivo no servidor
         }
         if(r.getEstado()==0){
             if(ctExecutados==0){
-                outputs.add("Nenhum caso de teste executado. Informe seu professor");
+                erros.add("Nenhum caso de teste executado. Informe seu professor");
                 r.setEstado(-4);
             }
             else if(ctExecutados==ctSucesso){
                 outputs.add("Resposta correta! ("+ctExecutados+" casos de teste)");
             }
             else{
-                outputs.add("Resposta incorreta! ("+ctSucesso+" casos de teste certos em "+ctExecutados+" casos testados)");
+                erros.add("Resposta incorreta! ("+ctSucesso+" casos de teste certos em "+ctExecutados+" casos testados)");
                 r.setEstado(2);
             }
         }
         
+        if (erros.size()==0) erros.add("Nenhum erro encontrado");
+        if (outputs.size()==0) outputs.add("Nenhum resultado a exibir");
+        
         rdao.corrigeResposta(r);
         
         req.setAttribute("outputs", outputs);
+        req.setAttribute("erros", erros);
         req.setAttribute("status", r.getEstado());
         
         return "/pages/resposta/corrigir.jsp";

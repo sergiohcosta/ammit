@@ -33,25 +33,41 @@
 
         
         <div class="dataTable_wrapper">
-            <table class="table table-striped table-bordered table-hover" id="tableCasosteste">
-                <thead>
-                    <tr>
-                        <th>Output</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-
-                    <c:forEach var="output" items="${outputs}">
-                        <tr class="odd gradeA">
-                            <td>${output}</td>
-                            
-                        </tr>
-
-                    </c:forEach>
-
-
-                </tbody>
+            <table>
+                <tr>
+                    <td>
+                        <table class="table table-striped table-bordered table-hover" id="tableCasosteste">
+                            <thead>
+                                <tr>
+                                    <th>Output</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <c:forEach var="output" items="${outputs}">
+                                    <tr class="odd gradeA">
+                                        <td>${output}</td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table table-striped table-bordered table-hover" id="tableErros">
+                            <thead>
+                                <tr>
+                                    <th>Erros</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <c:forEach var="erro" items="${erros}">
+                                    <tr class="odd gradeA">
+                                        <td>${erro}</td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
             </table>
         </div>
 
@@ -80,6 +96,16 @@
 
         var table = $('#tableCasosteste');
         table.DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.10/i18n/Portuguese-Brasil.json"
+            },
+            responsive: true,
+            bSort: false,
+            columnDefs: [{orderable: false, targets: [0]}]
+        });
+        
+        var table1 = $('#tableErrps');
+        table1.DataTable({
             "language": {
                 "url": "//cdn.datatables.net/plug-ins/1.10.10/i18n/Portuguese-Brasil.json"
             },
