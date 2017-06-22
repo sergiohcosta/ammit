@@ -156,22 +156,28 @@ public class Cadastrar implements Logica {
                         saida = "";
                         // CADASTRE ou SOBREPONHA (whatever) o arquivo upado
                         inputStream = filePart.getInputStream();
-
-                        // Valide se compila
-                        if (salvaArquivo(TMP + "professor.c", inputStream)) {
+                        InputStream validaStream =  filePart.getInputStream();
+                        
+                        // consegui salvar o arquivo, entao...
+                        if (salvaArquivo(TMP + "professor.c", validaStream)) {
+                            // vou tentar compilar
                             CodigoCompilado c = Compilador.compilar(TMP + "professor.c");
+                            // se nao conseguir compilar...
                             if (!c.isSucesso()) {
-                                inputStream = null;
                                 req.setAttribute("status", "0");
                                 req.setAttribute("errCodigofonte", "1");
                                 msgErro.add("O <b>Código fonte</b> não compilou! Erros encontrados:<BR>" + c.getErros());
                             }
+                        // nao consegui salvar o arquivo, entao...
                         } else {
-                            inputStream = null;
                             req.setAttribute("status", "0");
                             req.setAttribute("errCodigofonte", "1");
                             msgErro.add("O <b>Código fonte</b> não pode ser salvo!");
                         }
+                        
+                        
+
+                        
 
                     }
                 }

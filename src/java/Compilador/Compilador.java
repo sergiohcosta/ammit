@@ -26,7 +26,7 @@ import java.util.logging.Logger;
  * @author sergio
  */
 public class Compilador {
-    private static final String TCC="C:\\Users\\Renam\\Downloads\\tcc\\tcc.exe -o";
+    private static final String TCC="C:\\tcc\\tcc.exe -o";
     
     public static CodigoCompilado compilar(String path){
         CodigoCompilado c=new CodigoCompilado();

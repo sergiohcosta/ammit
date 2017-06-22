@@ -19,9 +19,7 @@
 
 
 <div class="row">
-    <div class="col-lg-8">
-
-        
+    <div class="col-lg-12">
 
         <c:if test="${status=='0'}"><div class="alert alert-success">Resposta Correta!</div></c:if>
         <c:if test="${status=='1'}"><div class="alert alert-danger">Erro de compilação!</div></c:if>
@@ -29,47 +27,50 @@
         <c:if test="${status=='-2'}"><div class="alert alert-danger">o código de teste do seu professor não compila</div></c:if>
         <c:if test="${status=='-3'}"><div class="alert alert-danger">Erro no servidor</div></c:if>
         <c:if test="${status=='-4'}"><div class="alert alert-danger">Nenhum caso de teste executado. Informe seu professor</div></c:if>
-        
 
-        
-        <div class="dataTable_wrapper">
-            <table>
-                <tr>
-                    <td>
-                        <table class="table table-striped table-bordered table-hover" id="tableCasosteste">
-                            <thead>
-                                <tr>
-                                    <th>Output</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <c:forEach var="output" items="${outputs}">
-                                    <tr class="odd gradeA">
-                                        <td>${output}</td>
-                                    </tr>
-                                </c:forEach>
-                            </tbody>
-                        </table>
-                    </td>
-                    <td>
-                        <table class="table table-striped table-bordered table-hover" id="tableErros">
-                            <thead>
-                                <tr>
-                                    <th>Erros</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <c:forEach var="erro" items="${erros}">
-                                    <tr class="odd gradeA">
-                                        <td>${erro}</td>
-                                    </tr>
-                                </c:forEach>
-                            </tbody>
-                        </table>
-                    </td>
-                </tr>
-            </table>
+
+
+            <div class="col-lg-6">
+                <div class="dataTable_wrapper">
+                    <table class="table table-striped table-bordered table-hover" id="tableCasosteste">
+                        <thead>
+                            <tr>
+                                <th>Output</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <c:forEach var="output" items="${outputs}">
+                            <tr class="odd gradeA">
+                                <td>${output}</td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
+            </div>
         </div>
+
+        <div class="col-lg-6">
+            <div class="dataTable_wrapper">
+                <table class="table table-striped table-bordered table-hover" id="tableErros">
+                    <thead>
+                        <tr>
+                            <th>Erros</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach var="erro" items="${erros}">
+                            <tr class="odd gradeA">
+                                <td>${erro}</td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+
+
 
     </div>
 </div>
@@ -94,54 +95,18 @@
         var boxsucesso = $('#BoxSucesso');
         var boxerro = $('#BoxErro');
 
-        var table = $('#tableCasosteste');
+        var table = $('#tableCasosteste,#tableErros');
         table.DataTable({
             "language": {
                 "url": "//cdn.datatables.net/plug-ins/1.10.10/i18n/Portuguese-Brasil.json"
             },
+            paging: true,
             responsive: true,
             bSort: false,
-            columnDefs: [{orderable: false, targets: [0]}]
-        });
-        
-        var table1 = $('#tableErrps');
-        table1.DataTable({
-            "language": {
-                "url": "//cdn.datatables.net/plug-ins/1.10.10/i18n/Portuguese-Brasil.json"
-            },
-            responsive: true,
-            bSort: false,
-            columnDefs: [{orderable: false, targets: [0]}]
+            orderable: false,
+            searching: false
         });
 
-        $('#tableCasosteste tbody').on('click', 'span.icon-delete', function () {
-            var botao = $(this);
-            var row = $(this).closest("tr").get(0);
-
-            if (botao.hasClass("glyphicon-remove")) {
-                if (confirm("REMOVER a questão?")) {
-                    var id = botao.attr("id");
-                    $.ajax({
-                        method: 'POST',
-                        dataType: "json",
-                        url: "Controle",
-                        data: {
-                            logica: "Casoteste.Gerenciar",
-                            op: "remover",
-                            pId: id
-                        },
-                        success: function (data) {
-                            if (data.status) {
-                                table.DataTable().row(row).remove().draw(false);
-                                boxsucesso.show().fadeOut(7500);
-                            } else {
-                                boxerro.show().fadeOut(7500);
-                            }
-                        }
-                    });
-                }
-            }
-        });
     });
 </script>   
 
