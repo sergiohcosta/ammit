@@ -1,6 +1,8 @@
+<%-- PAGES/USUARIO/GERENCIAR.JSP --%>
+
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<c:set var="area" value="administrador"/>
+<c:set var="area" value="Admin"/>
 
 <%@include file="/header.jsp" %>
 

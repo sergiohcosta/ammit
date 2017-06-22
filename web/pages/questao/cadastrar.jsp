@@ -1,7 +1,8 @@
 <%-- PAGES/QUESTAO/CADASTRAR.JSP --%>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@include file="/auth.jsp" %>
+
+<c:set var = "area" value = "Professor"/>
 
 <%@include file="/header.jsp" %>
 

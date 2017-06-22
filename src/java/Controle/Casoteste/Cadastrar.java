@@ -1,10 +1,14 @@
 package Controle.Casoteste;
 
+import Compilador.CodigoCompilado;
+import Compilador.Compilador;
 import beans.Questao;
 import beans.Casoteste;
 import Controle.Logica;
 import DAO.CasotesteDAO;
 import DAO.QuestaoDAO;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 
 import java.util.ArrayList;
@@ -22,6 +26,8 @@ op: para saber no POST se é cadastro ou alteracao
 id: se for > 0, editar
  */
 public class Cadastrar implements Logica {
+
+    private final String TMP = "C:\\tmp\\";
 
     @Override
     public String executa(HttpServletRequest req, HttpServletResponse res) throws Exception {
@@ -147,9 +153,26 @@ public class Cadastrar implements Logica {
                         }
                     } // se o tamanho do arquivo NAO for vazio...
                     else {
+                        saida = "";
                         // CADASTRE ou SOBREPONHA (whatever) o arquivo upado
                         inputStream = filePart.getInputStream();
-                        saida = "";
+
+                        // Valide se compila
+                        if (salvaArquivo(TMP + "professor.c", inputStream)) {
+                            CodigoCompilado c = Compilador.compilar(TMP + "professor.c");
+                            if (!c.isSucesso()) {
+                                inputStream = null;
+                                req.setAttribute("status", "0");
+                                req.setAttribute("errCodigofonte", "1");
+                                msgErro.add("O <b>Código fonte</b> não compilou! Erros encontrados:<BR>" + c.getErros());
+                            }
+                        } else {
+                            inputStream = null;
+                            req.setAttribute("status", "0");
+                            req.setAttribute("errCodigofonte", "1");
+                            msgErro.add("O <b>Código fonte</b> não pode ser salvo!");
+                        }
+
                     }
                 }
 
@@ -194,11 +217,12 @@ public class Cadastrar implements Logica {
                 } else {
 
                     System.out.println("Editando: " + cteste);
-                    
-                    if(doFileUpload)
+
+                    if (doFileUpload) {
                         ctDao.alteraCasoteste(cteste);
-                    else
+                    } else {
                         ctDao.alteraCasotesteSemUpload(cteste);
+                    }
 
                     req.setAttribute("msg", "Caso de teste alterado com sucesso");
                 }
@@ -239,6 +263,21 @@ public class Cadastrar implements Logica {
 
         return "/pages/casoteste/cadastrar.jsp";
 
+    }
+
+    private boolean salvaArquivo(String path, InputStream src) {
+        try {
+            File file = new File(path);
+            FileOutputStream fos = new FileOutputStream(file);
+            byte[] buffer = new byte[1];
+            while (src.read(buffer) > 0) {
+                fos.write(buffer);
+            }
+            fos.close();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 }

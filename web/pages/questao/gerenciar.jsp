@@ -2,7 +2,7 @@
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<c:set var="area" value="administrador"/>
+<c:set var="area" value="Professor"/>
 
 <%@include file="/header.jsp" %>
 

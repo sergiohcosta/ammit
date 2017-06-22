@@ -54,7 +54,7 @@
                     <c:forEach var="questao" items="${questoes}">
                         <tr class="odd gradeA">
                             <td>${questao.titulo}</td>
-                            <td>${questao.professor}</td>
+                            <td>${professores[questao.professor]}</td>
                             <td class="CelOpcoes" align="center">
                                 <a href="Controle?logica=Resposta.Responder&pId=${questao.id}">
                                     <span title="Responder" class="glyphicon glyphicon-pencil" aria-hidden="true"></span>

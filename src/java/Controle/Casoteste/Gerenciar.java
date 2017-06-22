@@ -7,6 +7,9 @@ import beans.Casoteste;
 
 import beans.Questao;
 import beans.Usuario;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,20 +18,36 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 public class Gerenciar implements Logica {
-
+    
     @Override
     public String executa(HttpServletRequest req, HttpServletResponse res) throws Exception {
 
         System.out.println("Executando a logica  " + this.getClass().getName() + " ...");
+
+        Questao q = new Questao();
+        Casoteste ct = new Casoteste();
+        QuestaoDAO qDao = new QuestaoDAO();
+        CasotesteDAO ctDao = new CasotesteDAO();
+
+        String op = (String) req.getParameter("op");
+
+        if ("remover".equals(op)) {
+
+            ct.setId(Integer.valueOf(req.getParameter("pId")));
+            System.out.println("Excluir caso de teste " + ct.getId());
+            ctDao.removerCasoteste(ct);
+            return "/pages/casoteste/removido.json";
+        }
+
         try {
             int questaoId = Integer.parseInt(req.getParameter("qId"));
+
+            System.out.println("--" + op);
 
             if (questaoId < 1) {
                 throw new NumberFormatException();
             }
 
-            Questao q = new Questao();
-            QuestaoDAO qDao = new QuestaoDAO();
             q = qDao.obtemQuestao(questaoId);
             req.setAttribute("q", q);
 
@@ -43,7 +62,6 @@ public class Gerenciar implements Logica {
             }
 
             List<Casoteste> casosteste = new ArrayList<>();
-            CasotesteDAO ctDao = new CasotesteDAO();
 
             casosteste = ctDao.listarCasosteste(questaoId);
 

@@ -110,7 +110,7 @@
             var row = $(this).closest("tr").get(0);
 
             if (botao.hasClass("glyphicon-remove")) {
-                if (confirm("REMOVER a questão?")) {
+                if (confirm("REMOVER o caso de teste?")) {
                     var id = botao.attr("id");
                     $.ajax({
                         method: 'POST',

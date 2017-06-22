@@ -32,6 +32,7 @@ public abstract class Corrector {
      * @throws Exception caso ocorra algum erro de runtime
      */
     public String execute(String exec, String input) throws Exception{
+        System.out.println("EXECUTE exec = " + exec);
         Runtime rt = Runtime.getRuntime();
         Process pro = rt.exec(exec);
         OutputStream os = pro.getOutputStream();

@@ -86,7 +86,9 @@
                                     </c:forEach>
                                 </select>
                                 <input type='button' id="gerar" value='Gerar'>
-                                <input type='button' id="ajuda" value='Aprenda mais sobre o AMMIT'>
+                                <input type='button' id="ajuda" value='Aprenda mais sobre o AMMIT' class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+
+
 
                             </div>
 
@@ -124,52 +126,99 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    Saídas
-                </div>
-                <div class="panel-body">
-                    <div class="form-group" id="tipo_saidas_seletor_codigo">
-                        <c:if test="${sourceUpado}"><div class="alert alert-warning">Você já tem um código fonte armazenado para esse caso de teste<br>Se você selecionar um novo arquivo, o antigo será perdido</div></c:if>
-                            <input type="radio" name="tipo_saidas" class="tipo_saidas" id="tipo_saidas_codigo" value="saidacodigo">
-                            <label>Utilize seu próprio código fonte para validar as entradas</label>
-                        </div>
-                        <div id="BoxSaidasCodigo" class="row">
-                            <div class="col-lg-6">
-                                <div id="BoxCodigofonte" class="form-group">
-                                    <label id="LabelCodigofonte">Forneca um arquivo com o código fonte</label>
-                                    <input type="file" class="form-control" name="codigofonte" placeholder="codigofonte" id="codigofonte">
-                                </div>
-                                <label>Linguagem do código fonte:</label>
-                                <select id="codigofonte_linguagem" name="codigofonte_linguagem">
-                                    <option value="C">C</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group" id="tipo_saidas_seletor_manual">
-                            <input type="radio" name="tipo_saidas" class="tipo_saidas" id="tipo_saidas_manual" value="saidamanual">
-                            <label>Insira manualmente suas saídas</label>
-                        </div>
-                        <div id="BoxSaidasManual" class="row">
-                            <div class="col-lg-6">
-                                <div id="BoxSaida" class="form-group">
-                                    <label id="LabelSaida">Saída</label>
-                                    <textarea style="width:100%; height: 200px;" name="saida" placeholder="saida" id="saida" class="form-control"><jsp:getProperty name="p" property="saida" /></textarea>
-                            </div>
-                        </div>
 
+    <div class="modal-body">
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">Sobre o AMMIT</h4>
                     </div>
+                    <div class="modal-body">
+                        Ammit é uma notação desenvolvida para simplificar a escrita de casos de teste. Por exemplo, para um programa que deva ler 10 inteiros de 1 a 100 e fazer alguma ação, em vez de escrever vários casos de teste como:
+                        <br><br>
+                        15 49 35 84 26 45 80 54 100 19
+                        <br><br>
+                        Com Ammit você pode escrever simplesmente escrever o seguinte:
+                        <br><br>
+                        i[1:100, 10]
+                        <br><br>
+                        E pronto!
+                        <br><br>
+                        A cada execução, Ammit gerará um ou mais novos casos de teste aleatórios com base na sua especificação. Isso ajuda a garantir que o aluno resolveu o exercício, e não apenas contornou os casos de teste.
+                        <br><br>
+                        Sintaxe:
+                        <br><br>
+                        Inteiros:
+                        i (gera um inteiro entre -32768 e 32767)
+                        i[x:y] (gera um número entre x e y, inclusive, ou entre y e x se y<x)
+                            i[x:y, z] (gera z inteiros entre x e y)
+                            Você pode omitir os índices x e  y, por exemplo:
+                            i[x:] (gera um inteiro entre x e 32767)
+                            i[:,z] (gera z inteiros entre -32768 e 32767)
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Entendi!</button>
+
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+</div>
+
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Saídas
+            </div>
+            <div class="panel-body">
+                <div class="form-group" id="tipo_saidas_seletor_codigo">
+                    <c:if test="${sourceUpado}"><div class="alert alert-warning">Você já tem um código fonte armazenado para esse caso de teste<br>Se você selecionar um novo arquivo, o antigo será perdido</div></c:if>
+                        <input type="radio" name="tipo_saidas" class="tipo_saidas" id="tipo_saidas_codigo" value="saidacodigo">
+                        <label>Utilize seu próprio código fonte para validar as entradas</label>
+                    </div>
+                    <div id="BoxSaidasCodigo" class="row">
+                        <div class="col-lg-6">
+                            <div id="BoxCodigofonte" class="form-group">
+                                <label id="LabelCodigofonte">Forneca um arquivo com o código fonte</label>
+                                <input type="file" class="form-control" name="codigofonte" placeholder="codigofonte" id="codigofonte">
+                            </div>
+                            <label>Linguagem do código fonte:</label>
+                            <select id="codigofonte_linguagem" name="codigofonte_linguagem">
+                                <option value="C">C</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group" id="tipo_saidas_seletor_manual">
+                        <input type="radio" name="tipo_saidas" class="tipo_saidas" id="tipo_saidas_manual" value="saidamanual">
+                        <label>Insira manualmente suas saídas</label>
+                    </div>
+                    <div id="BoxSaidasManual" class="row">
+                        <div class="col-lg-6">
+                            <div id="BoxSaida" class="form-group">
+                                <label id="LabelSaida">Saída</label>
+                                <textarea style="width:100%; height: 200px;" name="saida" placeholder="saida" id="saida" class="form-control"><jsp:getProperty name="p" property="saida" /></textarea>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <button type="submit" class="btn btn-default">Salvar</button>
-    <button type="reset" class="btn btn-default">Limpar</button>
+<button type="submit" class="btn btn-default">Salvar</button>
+<button type="reset" class="btn btn-default">Limpar</button>
 
-    <br><br>
+<br><br>
 </form>
 <script>
 
@@ -228,7 +277,7 @@
     $("#BoxEntradasManual").show();
     $("#tipo_entradas_ammit").show();
     $("#BoxEntradasAmmit").hide();
-    
+
     </c:if>
 
     <c:if test="${not empty p.saida}">
@@ -240,7 +289,7 @@
     </c:if>
 
     <c:if test="${empty p.saida}">
-    
+
     $("#tipo_saidas_seletor_codigo").show();
     $("#BoxSaidasCodigo").show();
     $("#tipo_saidas_seletor_manual").show();
@@ -279,7 +328,7 @@
         // se o ammit tiver selecionado
         if ($("#tipo_saidas_codigo").is(':checked')) {
             $("#BoxSaidasManual").hide();
-             $("#BoxSaidasCodigo").show();
+            $("#BoxSaidasCodigo").show();
         } else {
             $("#BoxSaidasCodigo").hide();
             $("#BoxSaidasManual").show();
