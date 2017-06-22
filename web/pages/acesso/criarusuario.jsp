@@ -99,7 +99,7 @@
                             <div id="BoxPerfil" class="form-group">
                                 <label>Perfil do usuário</label>
                                 <select name="perfil" placeholder="perfil" id="perfil" class="form-control">
-                                    <option value="">--- Selecione ---</option>
+                                    <option value="" disabled>--- Selecione ---</option>
                                     <option value="Professor">Professor</option>
                                     <option value="Aluno">Aluno</option>
                                 </select>

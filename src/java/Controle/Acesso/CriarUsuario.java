@@ -35,7 +35,12 @@ public class CriarUsuario implements Logica {
             // verificacao server-side do POST
             // TODO: implementar validacao nos campos que faltam e checar se há melhorias possíveis nas validações
             String perfil = req.getParameter("perfil");
-
+            if (perfil == null){
+                req.setAttribute("status", "0");
+                req.setAttribute("errperfil", "1");
+                msgErro.add("Seelcione um perfil");
+            }
+            
             String nome = req.getParameter("nome");
 
             if (nome.length() < 3) {
