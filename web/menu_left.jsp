@@ -1,8 +1,3 @@
-<%-- 
-    Document   : menu_left
-    Created on : Oct 19, 2015, 8:58:16 PM
-    Author     : sergio
---%>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
@@ -28,7 +23,7 @@
         </li>
         </c:if>
 
-        <c:if test="${sessionScope.usuario.perfil == 'Professor'}">
+        <c:if test="${sessionScope.usuario.perfil != 'Aluno'}">
         <li class="MenuGerente">
             <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i>Questões<span class="fa arrow"></span></a>
             <ul class="nav nav-second-level">

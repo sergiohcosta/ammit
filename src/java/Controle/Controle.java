@@ -39,8 +39,13 @@ public class Controle extends HttpServlet {
 
             Logica logica = (Logica) classe.newInstance();
             String pagina = logica.executa(request, response);
+            System.out.println("Invocando view " + pagina);
             request.getRequestDispatcher(pagina).forward(request, response);
 
+        } catch (ClassNotFoundException cnfEx) {
+            request.setAttribute("status", 0);
+
+            request.getRequestDispatcher("index.jsp").forward(request, response);
         } catch (Exception e) {
             throw new ServletException("A lógica de negócio causou uma exceção", e);
         }
