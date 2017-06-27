@@ -39,7 +39,7 @@ public class Compilador {
             input = Compilador.class.getClassLoader().getResourceAsStream("ammit.properties");
             prop.load(input);
 
-            TCC = prop.getProperty("tcc");
+            TCC = prop.getProperty("tcc","C:\\\\tcc\\\\tcc.exe -o");
             
         } catch (IOException ex) {
             Logger.getLogger(Compilador.class.getName()).log(Level.SEVERE, null, ex);
