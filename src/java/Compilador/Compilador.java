@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,38 +27,52 @@ import java.util.logging.Logger;
  * @author sergio
  */
 public class Compilador {
-    private static final String TCC="C:\\tcc\\tcc.exe -o";
-    
-    public static CodigoCompilado compilar(String path){
-        CodigoCompilado c=new CodigoCompilado();
+
+    private static String TCC = "";
+
+    public static CodigoCompilado compilar(String path) {
         
-        String exec=path.replaceFirst(".c", ".exe");
-        Runtime r=Runtime.getRuntime();
-        try{
-            Process p=r.exec(TCC+exec+" "+path);
-            if (p.waitFor(5, TimeUnit.SECONDS)){
-                if (p.exitValue()==0){
+        Properties prop = new Properties();
+        InputStream input = null;
+        
+        try {
+            input = Compilador.class.getClassLoader().getResourceAsStream("ammit.properties");
+            prop.load(input);
+
+            TCC = prop.getProperty("tcc");
+            
+        } catch (IOException ex) {
+            Logger.getLogger(Compilador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        CodigoCompilado c = new CodigoCompilado();
+        String exec = path.replaceFirst("\\.c", ".exe");
+        Runtime r = Runtime.getRuntime();
+        try {
+            String executar = TCC + "\"" + exec + "\" \"" + path + "\"";
+            Process p = r.exec(executar);
+            if (p.waitFor(5, TimeUnit.SECONDS)) {
+                if (p.exitValue() == 0) {
                     c.setSucesso(true);
                     c.setExec(exec);
-                }
-                else{
+                } else {
                     c.setSucesso(false);
                     BufferedReader error = new BufferedReader(new InputStreamReader(p.getInputStream()));
-                    String x=error.readLine(), response="";
-                    while (x != null){
-                        response+=x;
-                        x=error.readLine();
-                        if (x!= null) response+="\r\n";
+                    String x = error.readLine(), response = "";
+                    while (x != null) {
+                        response += x;
+                        x = error.readLine();
+                        if (x != null) {
+                            response += "\r\n";
+                        }
                     }
                     c.setErros(response);
                 }
-            }
-            else{
+            } else {
                 c.setSucesso(false);
                 c.setErros("Tempo-limite para compilação excedido");
             }
-        }
-        catch(IOException io){
+        } catch (IOException io) {
             c.setSucesso(false);
             c.setErros(io.getMessage());
         } catch (InterruptedException ex) {
@@ -66,7 +81,7 @@ public class Compilador {
         }
         return c;
     }
-    
+
     /*
     private static void printLines(String name, InputStream ins) throws Exception {
         String line = null;

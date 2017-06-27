@@ -158,10 +158,18 @@ public class Cadastrar implements Logica {
                         inputStream = filePart.getInputStream();
                         InputStream validaStream =  filePart.getInputStream();
                         
+                        
+                        String relativeWebPath = "/WEB-INF/tmp/";
+                        String absoluteDiskPath = req.getServletContext().getRealPath(relativeWebPath) + File.separator;
+                        System.out.println("absoluteDiskPath=" + absoluteDiskPath);
+                        
+                        
                         // consegui salvar o arquivo, entao...
-                        if (salvaArquivo(TMP + "professor.c", validaStream)) {
+                        //if (salvaArquivo(TMP + "professor.c", validaStream)) {
+                        if (salvaArquivo(absoluteDiskPath + "professor.c", validaStream)) {
                             // vou tentar compilar
-                            CodigoCompilado c = Compilador.compilar(TMP + "professor.c");
+                            //CodigoCompilado c = Compilador.compilar(TMP + "professor.c");
+                            CodigoCompilado c = Compilador.compilar(absoluteDiskPath + "professor.c");
                             // se nao conseguir compilar...
                             if (!c.isSucesso()) {
                                 req.setAttribute("status", "0");
@@ -174,11 +182,6 @@ public class Cadastrar implements Logica {
                             req.setAttribute("errCodigofonte", "1");
                             msgErro.add("O <b>Código fonte</b> não pode ser salvo!");
                         }
-                        
-                        
-
-                        
-
                     }
                 }
 
@@ -272,6 +275,7 @@ public class Cadastrar implements Logica {
     }
 
     private boolean salvaArquivo(String path, InputStream src) {
+        System.out.println("salvaArquivo path" + path);
         try {
             File file = new File(path);
             FileOutputStream fos = new FileOutputStream(file);

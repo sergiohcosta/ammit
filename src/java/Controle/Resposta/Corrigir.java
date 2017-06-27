@@ -64,8 +64,8 @@ public class Corrigir implements Logica {
                 r.setEstado(0); //considerado certo até que seja provado o contrário
                 for(Casoteste caso:casos){
                     if(!caso.getAmmit_seed().isEmpty()){ ///se for um caso de teste usando Ammit
-                        if (salvaArquivo(TMP+caso.getTitulo(), caso.getCodigofonte())){
-                            CodigoCompilado cprof=Compilador.compilar(TMP+caso.getTitulo());
+                        if (salvaArquivo(TMP+caso.getTitulo()+".c", caso.getCodigofonte())){
+                            CodigoCompilado cprof=Compilador.compilar(TMP+caso.getTitulo()+".c");
                             if (cprof.isSucesso()){
                                 InputGenerator ig=new InputGenerator(caso.getAmmit_seed());
                                 outputs.add("Início do caso de teste "+caso.getTitulo());
@@ -112,8 +112,8 @@ public class Corrigir implements Logica {
                                 erros.add("Caso de teste "+caso.getTitulo()+" ignorado: o número de saídas difere do número de entradas");
                             }
                         }
-                        else if (salvaArquivo(TMP+caso.getTitulo(), caso.getCodigofonte())){ //se for CTM com código para comparar
-                            CodigoCompilado cprof=Compilador.compilar(TMP+caso.getTitulo());
+                        else if (salvaArquivo(TMP+caso.getTitulo()+".c", caso.getCodigofonte())){ //se for CTM com código para comparar
+                            CodigoCompilado cprof=Compilador.compilar(TMP+caso.getTitulo()+".c");
                             if (cprof.isSucesso()){
                                 outputs.add("Início do caso de teste "+caso.getTitulo());
                                 for(int i=0; i<entradas.length;i++){
